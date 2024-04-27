@@ -1,20 +1,20 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { StockSkeleton } from './stock-skeleton'
-import { StocksSkeleton } from './stocks-skeleton'
+import { RentalSkeleton } from './Rental-skeleton'
+import { RentalsSkeleton } from './Rentals-skeleton'
 import { EventsSkeleton } from './events-skeleton'
 
 export { spinner } from './spinner'
 export { BotCard, BotMessage, SystemMessage } from './message'
 
-const Stock = dynamic(() => import('./stock').then(mod => mod.Stock), {
+const Rental = dynamic(() => import('./Rental').then(mod => mod.Rental), {
   ssr: false,
-  loading: () => <StockSkeleton />
+  loading: () => <RentalSkeleton />
 })
 
 const Purchase = dynamic(
-  () => import('./stock-purchase').then(mod => mod.Purchase),
+  () => import('./Rental-purchase').then(mod => mod.Purchase),
   {
     ssr: false,
     loading: () => (
@@ -23,9 +23,9 @@ const Purchase = dynamic(
   }
 )
 
-const Stocks = dynamic(() => import('./stocks').then(mod => mod.Stocks), {
+const Rentals = dynamic(() => import('./Rentals').then(mod => mod.Rentals), {
   ssr: false,
-  loading: () => <StocksSkeleton />
+  loading: () => <RentalsSkeleton />
 })
 
 const Events = dynamic(() => import('./events').then(mod => mod.Events), {
@@ -33,4 +33,4 @@ const Events = dynamic(() => import('./events').then(mod => mod.Events), {
   loading: () => <EventsSkeleton />
 })
 
-export { Stock, Purchase, Stocks, Events }
+export { Rental, Purchase, Rentals, Events }

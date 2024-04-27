@@ -1,3 +1,4 @@
+
 import 'server-only'
 
 import {
@@ -15,16 +16,16 @@ import {
   BotCard,
   BotMessage,
   SystemMessage,
-  Stock,
+  Rental,
   Purchase
 } from '@/components/stocks'
 
 import { z } from 'zod'
 import { EventsSkeleton } from '@/components/stocks/events-skeleton'
 import { Events } from '@/components/stocks/events'
-import { StocksSkeleton } from '@/components/stocks/stocks-skeleton'
-import { Stocks } from '@/components/stocks/stocks'
-import { StockSkeleton } from '@/components/stocks/stock-skeleton'
+import { RentalsSkeleton } from '@/components/stocks/Rentals-skeleton'
+import { Rentals } from '@/components/stocks/Rentals'
+import { RentalSkeleton } from '@/components/stocks/Rental-skeleton'
 import {
   formatNumber,
   runAsyncFnWithoutBlocking,
@@ -81,7 +82,7 @@ async function confirmPurchase(symbol: string, price: number, amount: number) {
 
     systemMessage.done(
       <SystemMessage>
-        You have purchased {amount} shares of {symbol} at ${price}. Total cost ={' '}
+        You have purchased {amount} Days of {symbol} at ${price}. Total cost ={' '}
         {formatNumber(amount * price)}.
       </SystemMessage>
     )
@@ -93,7 +94,7 @@ async function confirmPurchase(symbol: string, price: number, amount: number) {
         {
           id: nanoid(),
           role: 'function',
-          name: 'showStockPurchase',
+          name: 'showRentalPurchase',
           content: JSON.stringify({
             symbol,
             price,
@@ -104,7 +105,7 @@ async function confirmPurchase(symbol: string, price: number, amount: number) {
         {
           id: nanoid(),
           role: 'system',
-          content: `[User has purchased ${amount} shares of ${symbol} at ${price}. Total cost = ${
+          content: `[User has purchased ${amount} Days of ${symbol} at ${price}. Total cost = ${
             amount * price
           }]`
         }
@@ -149,18 +150,18 @@ async function submitUserMessage(content: string) {
       {
         role: 'system',
         content: `\
-You are a stock trading conversation bot and you can help users buy stocks, step by step.
-You and the user can discuss stock prices and the user can adjust the amount of stocks they want to buy, or place an order, in the UI.
+You are a Car Rental conversation bot and you can help users buy Rentals, step by step.
+You and the user can discuss Rental prices and the user can adjust the amount of time for  Car Rentals they want to buy, or place an order, in the UI.
 
 Messages inside [] means that it's a UI element or a user event. For example:
-- "[Price of AAPL = 100]" means that an interface of the stock price of AAPL is shown to the user.
-- "[User has changed the amount of AAPL to 10]" means that the user has changed the amount of AAPL to 10 in the UI.
+- "[Price of Prius = 100]" means that an interface of the Rental price of Prius is shown to the user.
+- "[User has changed the amount of Prius to 10]" means that the user has changed the amount days to rent a Prius to 10 in the UI.
 
-If the user requests purchasing a stock, call \`show_stock_purchase_ui\` to show the purchase UI.
-If the user just wants the price, call \`show_stock_price\` to show the price.
-If you want to show trending stocks, call \`list_stocks\`.
+If the user requests purchasing a Rental, call \`show_Rental_purchase_ui\` to show the purchase UI.
+If the user just wants the price, call \`show_Rental_price\` to show the price.
+If you want to show trending Rentals, call \`list_Rentals\`.
 If you want to show events, call \`get_events\`.
-If the user wants to sell stock, or complete another impossible task, respond that you are a demo and cannot do that.
+If the user wants to sell Rental, or complete another impossible task, respond that you are a demo and cannot do that.
 
 Besides that, you can also chat with users and do some calculations if needed.`
       },
@@ -196,21 +197,21 @@ Besides that, you can also chat with users and do some calculations if needed.`
       return textNode
     },
     functions: {
-      listStocks: {
-        description: 'List three imaginary stocks that are trending.',
+      listRentals: {
+        description: 'List three imaginary Rentals that are trending.',
         parameters: z.object({
-          stocks: z.array(
+          rentals: z.array(
             z.object({
-              symbol: z.string().describe('The symbol of the stock'),
-              price: z.number().describe('The price of the stock'),
-              delta: z.number().describe('The change in price of the stock')
+              symbol: z.string().describe('The symbol of the Rental'),
+              price: z.number().describe('The price of the Rental'),
+              delta: z.number().describe('The change in price of the Rental')
             })
           )
         }),
-        render: async function* ({ stocks }) {
+        render: async function* ({ rentals }) {
           yield (
             <BotCard>
-              <StocksSkeleton />
+              <RentalsSkeleton />
             </BotCard>
           )
 
@@ -223,35 +224,35 @@ Besides that, you can also chat with users and do some calculations if needed.`
               {
                 id: nanoid(),
                 role: 'function',
-                name: 'listStocks',
-                content: JSON.stringify(stocks)
+                name: 'listRentals',
+                content: JSON.stringify(rentals)
               }
             ]
           })
 
           return (
             <BotCard>
-              <Stocks props={stocks} />
+              <Rentals props={rentals} />
             </BotCard>
           )
         }
       },
-      showStockPrice: {
+      showRentalPrice: {
         description:
-          'Get the current stock price of a given stock or currency. Use this to show the price to the user.',
+          'Get the current Rental price of a given Car Rental or currency. Use this to show the price to the user.',
         parameters: z.object({
           symbol: z
             .string()
             .describe(
-              'The name or symbol of the stock or currency. e.g. DOGE/AAPL/USD.'
+              'The name or symbol of the Rental or currency. e.g. BMW/Honda/SGD.'
             ),
-          price: z.number().describe('The price of the stock.'),
-          delta: z.number().describe('The change in price of the stock')
+          price: z.number().describe('The price of the Rental.'),
+          delta: z.number().describe('The change in price of the Rental')
         }),
         render: async function* ({ symbol, price, delta }) {
           yield (
             <BotCard>
-              <StockSkeleton />
+              <RentalSkeleton />
             </BotCard>
           )
 
@@ -264,7 +265,7 @@ Besides that, you can also chat with users and do some calculations if needed.`
               {
                 id: nanoid(),
                 role: 'function',
-                name: 'showStockPrice',
+                name: 'showRentalPrice',
                 content: JSON.stringify({ symbol, price, delta })
               }
             ]
@@ -272,29 +273,29 @@ Besides that, you can also chat with users and do some calculations if needed.`
 
           return (
             <BotCard>
-              <Stock props={{ symbol, price, delta }} />
+              <Rental props={{ symbol, price, delta }} />
             </BotCard>
           )
         }
       },
-      showStockPurchase: {
+      showRentalPurchase: {
         description:
-          'Show price and the UI to purchase a stock or currency. Use this if the user wants to purchase a stock or currency.',
+          'Show price and the UI to purchase a Car Rental or currency. Use this if the user wants to purchase a Car Rental or currency.',
         parameters: z.object({
           symbol: z
             .string()
             .describe(
-              'The name or symbol of the stock or currency. e.g. DOGE/AAPL/USD.'
+              'The name or symbol of the Rental or currency. e.g. BMW/Mazda/USD.'
             ),
-          price: z.number().describe('The price of the stock.'),
-          numberOfShares: z
+          price: z.number().describe('The price of the Rental.'),
+          numberOfDays: z
             .number()
             .describe(
-              'The **number of shares** for a stock or currency to purchase. Can be optional if the user did not specify it.'
+              'The **number of Days** for a Rental or currency to purchase. Can be optional if the user did not specify it.'
             )
         }),
-        render: async function* ({ symbol, price, numberOfShares = 100 }) {
-          if (numberOfShares <= 0 || numberOfShares > 1000) {
+        render: async function* ({ symbol, price, numberOfDays = 100 }) {
+          if (numberOfDays <= 0 || numberOfDays > 1000) {
             aiState.done({
               ...aiState.get(),
               messages: [
@@ -317,11 +318,11 @@ Besides that, you can also chat with users and do some calculations if needed.`
               {
                 id: nanoid(),
                 role: 'function',
-                name: 'showStockPurchase',
+                name: 'showRentalPurchase',
                 content: JSON.stringify({
                   symbol,
                   price,
-                  numberOfShares
+                  numberOfDays
                 })
               }
             ]
@@ -331,7 +332,7 @@ Besides that, you can also chat with users and do some calculations if needed.`
             <BotCard>
               <Purchase
                 props={{
-                  numberOfShares,
+                  numberOfDays,
                   symbol,
                   price: +price,
                   status: 'requires_action'
@@ -343,7 +344,7 @@ Besides that, you can also chat with users and do some calculations if needed.`
       },
       getEvents: {
         description:
-          'List funny imaginary events between user highlighted dates that describe stock activity.',
+          'List funny imaginary events between user highlighted dates that describe Rental activity.',
         parameters: z.object({
           events: z.array(
             z.object({
@@ -469,15 +470,15 @@ export const getUIStateFromAIState = (aiState: Chat) => {
       id: `${aiState.chatId}-${index}`,
       display:
         message.role === 'function' ? (
-          message.name === 'listStocks' ? (
+          message.name === 'listRentals' ? (
             <BotCard>
-              <Stocks props={JSON.parse(message.content)} />
+              <Rentals props={JSON.parse(message.content)} />
             </BotCard>
-          ) : message.name === 'showStockPrice' ? (
+          ) : message.name === 'showRentalPrice' ? (
             <BotCard>
-              <Stock props={JSON.parse(message.content)} />
+              <Rental props={JSON.parse(message.content)} />
             </BotCard>
-          ) : message.name === 'showStockPurchase' ? (
+          ) : message.name === 'showRentalPurchase' ? (
             <BotCard>
               <Purchase props={JSON.parse(message.content)} />
             </BotCard>

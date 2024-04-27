@@ -7,18 +7,18 @@ import { formatNumber } from '@/lib/utils'
 import type { AI } from '@/lib/chat/actions'
 
 interface Purchase {
-  numberOfShares?: number
+  numberOfDays?: number
   symbol: string
   price: number
   status: 'requires_action' | 'completed' | 'expired'
 }
 
 export function Purchase({
-  props: { numberOfShares, symbol, price, status = 'requires_action' }
+  props: { numberOfDays, symbol, price, status = 'requires_action' }
 }: {
   props: Purchase
 }) {
-  const [value, setValue] = useState(numberOfShares || 100)
+  const [value, setValue] = useState(numberOfDays || 100)
   const [purchasingUI, setPurchasingUI] = useState<null | React.ReactNode>(null)
   const [aiState, setAIState] = useAIState<typeof AI>()
   const [, setMessages] = useUIState<typeof AI>()
@@ -36,7 +36,7 @@ export function Purchase({
     // Insert a hidden history info to the list.
     const message = {
       role: 'system' as const,
-      content: `[User has changed to purchase ${newValue} shares of ${name}. Total cost: $${(
+      content: `[User has changed to purchase ${newValue} Days of ${name}. Total cost: $${(
         newValue * price
       ).toFixed(2)}]`,
 
@@ -61,9 +61,6 @@ export function Purchase({
 
   return (
     <div className="rounded-xl border bg-zinc-950 p-4 text-green-400">
-      <div className="float-right inline-block rounded-full bg-white/10 px-2 py-1 text-xs">
-        +1.23% ↑
-      </div>
       <div className="text-lg text-zinc-300">{symbol}</div>
       <div className="text-3xl font-bold">${price}</div>
       {purchasingUI ? (
@@ -71,27 +68,27 @@ export function Purchase({
       ) : status === 'requires_action' ? (
         <>
           <div className="relative mt-6 pb-6">
-            <p>Shares to purchase</p>
+            <p>Days to purchase</p>
             <input
               id="labels-range-input"
               type="range"
               value={value}
               onChange={onSliderChange}
-              min="10"
-              max="1000"
+              min="1"
+              max="100"
               className="h-1 w-full cursor-pointer appearance-none rounded-lg bg-zinc-600 accent-green-500 dark:bg-zinc-700"
             />
             <span className="absolute bottom-1 start-0 text-xs text-zinc-400">
-              10
+              1
             </span>
             <span className="absolute bottom-1 start-1/3 -translate-x-1/2 text-xs text-zinc-400 rtl:translate-x-1/2">
-              100
+              33
             </span>
             <span className="absolute bottom-1 start-2/3 -translate-x-1/2 text-xs text-zinc-400 rtl:translate-x-1/2">
-              500
+              66
             </span>
             <span className="absolute bottom-1 end-0 text-xs text-zinc-400">
-              1000
+              100
             </span>
           </div>
 
@@ -101,14 +98,14 @@ export function Purchase({
               <div className="flex basis-1/3 flex-col tabular-nums sm:basis-auto sm:flex-row sm:items-center sm:gap-2">
                 {value}
                 <span className="mb-1 text-sm font-normal text-zinc-600 sm:mb-0 dark:text-zinc-400">
-                  shares
+                  Days
                 </span>
               </div>
               <div className="basis-1/3 text-center sm:basis-auto">×</div>
               <span className="flex basis-1/3 flex-col tabular-nums sm:basis-auto sm:flex-row sm:items-center sm:gap-2">
                 ${price}
                 <span className="mb-1 ml-1 text-sm font-normal text-zinc-600 sm:mb-0 dark:text-zinc-400">
-                  per share
+                  per day
                 </span>
               </span>
               <div className="mt-2 basis-full border-t border-t-zinc-700 pt-2 text-center sm:mt-0 sm:basis-auto sm:border-0 sm:pt-0 sm:text-left">
