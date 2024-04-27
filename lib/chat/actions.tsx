@@ -18,14 +18,14 @@ import {
   SystemMessage,
   Rental,
   Purchase
-} from '@/components/stocks'
+} from '@/components/rentals'
 
 import { z } from 'zod'
-import { EventsSkeleton } from '@/components/stocks/events-skeleton'
-import { Events } from '@/components/stocks/events'
-import { RentalsSkeleton } from '@/components/stocks/Rentals-skeleton'
-import { Rentals } from '@/components/stocks/Rentals'
-import { RentalSkeleton } from '@/components/stocks/Rental-skeleton'
+import { EventsSkeleton } from '@/components/rentals/events-skeleton'
+import { Events } from '@/components/rentals/events'
+import { RentalsSkeleton } from '@/components/rentals/Rentals-skeleton'
+import { Rentals } from '@/components/rentals/Rentals'
+import { RentalSkeleton } from '@/components/rentals/Rental-skeleton'
 import {
   formatNumber,
   runAsyncFnWithoutBlocking,
@@ -33,7 +33,7 @@ import {
   nanoid
 } from '@/lib/utils'
 import { saveChat } from '@/app/actions'
-import { SpinnerMessage, UserMessage } from '@/components/stocks/message'
+import { SpinnerMessage, UserMessage } from '@/components/rentals/message'
 import { Chat } from '@/lib/types'
 import { auth } from '@/auth'
 
