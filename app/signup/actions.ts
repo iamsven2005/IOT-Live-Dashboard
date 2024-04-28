@@ -10,7 +10,8 @@ import { AuthError } from 'next-auth'
 export async function createUser(
   email: string,
   hashedPassword: string,
-  salt: string
+  salt: string,
+  role: string
 ) {
   const existingUser = await getUser(email)
 
@@ -24,7 +25,8 @@ export async function createUser(
       id: crypto.randomUUID(),
       email,
       password: hashedPassword,
-      salt
+      salt,
+      role
     }
 
     await kv.hmset(`user:${email}`, user)
@@ -60,7 +62,7 @@ export async function signup(
 
   if (parsedCredentials.success) {
     const salt = crypto.randomUUID()
-
+    const role = "user"
     const encoder = new TextEncoder()
     const saltedPassword = encoder.encode(password + salt)
     const hashedPasswordBuffer = await crypto.subtle.digest(
@@ -68,9 +70,8 @@ export async function signup(
       saltedPassword
     )
     const hashedPassword = getStringFromBuffer(hashedPasswordBuffer)
-
     try {
-      const result = await createUser(email, hashedPassword, salt)
+      const result = await createUser(email, hashedPassword, salt, role)
 
       if (result.resultCode === ResultCode.UserCreated) {
         await signIn('credentials', {
