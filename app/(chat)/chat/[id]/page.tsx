@@ -1,3 +1,4 @@
+//@ts-ignore
 import { type Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 
@@ -13,38 +14,28 @@ export interface ChatPageProps {
   }
 }
 
-export async function generateMetadata({
-  params
-}: ChatPageProps): Promise<Metadata> {
-  const session = await auth()
-
-  if (!session?.user) {
-    return {}
-  }
-
-  const chat = await getChat(params.id, session.user.id)
-  return {
-    title: chat?.title.toString().slice(0, 50) ?? 'Chat'
-  }
-}
-
 export default async function ChatPage({ params }: ChatPageProps) {
   const session = (await auth()) as Session
-  const missingKeys = await getMissingKeys()
 
   if (!session?.user) {
-    redirect(`/login?next=/chat/${params.id}`)
+    redirect(`/login?next=/chat/${params.id}`);
+
   }
 
-  const userId = session.user.id as string
-  const chat = await getChat(params.id, userId)
+  const userId = session.user.id; 
+
+  if (!userId) {
+    redirect('/');
+  }
+
+  const chat = await getChat(params.id, userId);
 
   if (!chat) {
-    redirect('/')
+    redirect('/');
   }
 
-  if (chat?.userId !== session?.user?.id) {
-    notFound()
+  if (chat.userId !== userId) {
+    notFound();
   }
 
   return (
@@ -53,7 +44,7 @@ export default async function ChatPage({ params }: ChatPageProps) {
         id={chat.id}
         session={session}
         initialMessages={chat.messages}
-        missingKeys={missingKeys}
+        missingKeys={await getMissingKeys()}
       />
     </AI>
   )

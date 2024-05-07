@@ -36,6 +36,7 @@ import { saveChat } from '@/app/actions'
 import { SpinnerMessage, UserMessage } from '@/components/rentals/message'
 import { Chat } from '@/lib/types'
 import { auth } from '@/auth'
+import { db } from '../db'
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || ''
@@ -141,7 +142,20 @@ async function submitUserMessage(content: string) {
 
   let textStream: undefined | ReturnType<typeof createStreamableValue<string>>
   let textNode: undefined | React.ReactNode
+  const cars = await db.car.findMany({
+    select: {
+      id: true,
+      username: true,
+      brand: true,
+      rental: true,
+      imageUrl: true,
+      carplate: true,
+      comment: true,
+      commenter: true
 
+    }
+  })
+  const cararray = JSON.stringify(cars);
   const ui = render({
     model: 'gpt-3.5-turbo',
     provider: openai,
@@ -160,8 +174,12 @@ Messages inside [] means that it's a UI element or a user event. For example:
 If the user requests purchasing a Rental, call \`show_Rental_purchase_ui\` to show the purchase UI.
 If the user just wants the price, call \`show_Rental_price\` to show the price.
 If you want to show trending Rentals, call \`list_Rentals\`.
+If you want to show other trending Rentals, call \`list_Rentals\`.
 If you want to show events, call \`get_events\`.
-If the user wants to sell Rental, or complete another impossible task, respond that you are a demo and cannot do that.
+If the user wants to sell Rental, or complete another impossible task, respond that you are a 
+demo and cannot do that.
+
+Current cars available are ${cararray}
 
 Besides that, you can also chat with users and do some calculations if needed.`
       },
@@ -198,13 +216,14 @@ Besides that, you can also chat with users and do some calculations if needed.`
     },
     functions: {
       listRentals: {
-        description: 'List three imaginary Rentals that are trending.',
+        description: 'List all cars that are avaliable as well as their respective image url',
         parameters: z.object({
           rentals: z.array(
             z.object({
-              symbol: z.string().describe('The symbol of the Rental'),
+              symbol: z.string().describe('The brand of the Rental'),
               price: z.number().describe('The price of the Rental'),
-              delta: z.number().describe('The change in price of the Rental')
+              name: z.string().describe('The name of the rental'),
+              image: z.string().describe('The image url of the rental')
             })
           )
         }),
@@ -247,9 +266,15 @@ Besides that, you can also chat with users and do some calculations if needed.`
               'The name or symbol of the Rental or currency. e.g. BMW/Honda/SGD.'
             ),
           price: z.number().describe('The price of the Rental.'),
-          delta: z.number().describe('The change in price of the Rental')
+          brand: z.string().describe('The brand of the Rental'),
+          image: z.string().describe('The image of the Rental'),
+          name: z.string().describe('The name of the Rental'),
+          comment: z.string().describe('The comment of the Rental'),
+          commenter: z.string().describe('The commenter of the Rental'),
+          description: z.string().describe('The description of the Rental'),
+          carplate: z.string().describe('The carplate of the Rental'),
         }),
-        render: async function* ({ symbol, price, delta }) {
+        render: async function* ({ symbol, price, brand, image, name, comment, commenter, description, carplate }) {
           yield (
             <BotCard>
               <RentalSkeleton />
@@ -266,14 +291,14 @@ Besides that, you can also chat with users and do some calculations if needed.`
                 id: nanoid(),
                 role: 'function',
                 name: 'showRentalPrice',
-                content: JSON.stringify({ symbol, price, delta })
+                content: JSON.stringify({ symbol, price, image, name, brand, comment, commenter, description, carplate })
               }
             ]
           })
 
           return (
             <BotCard>
-              <Rental props={{ symbol, price, delta }} />
+              <Rental props={{ symbol, price, image, name, brand, comment, commenter, description, carplate }} />
             </BotCard>
           )
         }

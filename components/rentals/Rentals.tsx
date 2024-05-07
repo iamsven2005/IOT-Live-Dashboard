@@ -7,7 +7,8 @@ import type { AI } from '@/lib/chat/actions'
 interface Rental {
   symbol: string
   price: number
-  delta: number
+  name: string
+  image: string
 }
 
 export function Rentals({ props: Rentals }: { props: Rental[] }) {
@@ -29,6 +30,9 @@ export function Rentals({ props: Rentals }: { props: Rental[] }) {
             <div className="flex flex-col">
               <div className="bold uppercase text-zinc-300">{Rental.symbol}</div>
               <div className="bold uppercase text-zinc-300">${Rental.price} / Day</div>
+              <div  className='rounded-xl'>
+                <img src={Rental.image}></img>
+              </div>
             </div>
           </button>
         ))}

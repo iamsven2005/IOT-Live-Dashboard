@@ -1,0 +1,26 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+model User{
+  id String @id @default(cuid())
+  username String @unique
+  role String
+  createdAt DateTime @default(now())
+}
+model Car{
+  id String @id @default(cuid())
+  username String @unique
+  brand String
+  imageUrl String
+  rental String
+  description String
+  comment String @default("comment")
+  commenter String @default("commenter")
+  carplate String @default("ZZ12345")
+}

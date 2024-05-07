@@ -6,6 +6,7 @@ import { z } from 'zod'
 import { kv } from '@vercel/kv'
 import { getUser } from '../login/actions'
 import { AuthError } from 'next-auth'
+import { db } from '@/lib/db'
 
 export async function createUser(
   email: string,
@@ -30,7 +31,12 @@ export async function createUser(
     }
 
     await kv.hmset(`user:${email}`, user)
-
+    const userdb = await db.user.create({
+      data: {
+        username: `${email}`,
+        role: `${role}`,
+      },
+    })
     return {
       type: 'success',
       resultCode: ResultCode.UserCreated
