@@ -1,26 +1,57 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
-model User{
-  id String @id @default(cuid())
-  username String @unique
-  role String
-  createdAt DateTime @default(now())
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  password      String
+  salt          String
+  role          String
+  assignedTask  String
 }
-model Car{
-  id String @id @default(cuid())
-  username String @unique
-  brand String
-  imageUrl String
-  rental String
+
+model Car {
+  id          String    @id @default(cuid())
+  title       String
   description String
-  comment String @default("comment")
-  commenter String @default("commenter")
-  carplate String @default("ZZ12345")
+  image       String
+  brand       String //country
+  parkinglot  String //state
+  rental      Int
+  country     String
+  state       String
+  city        String
+  bookings    Booking[]
+  sensors     Sensor[] //rooms
+}
+
+model Sensor {
+  id          String  @id @default(cuid())
+  title       String
+  description String
+  threshold   String
+  image       String
+  Car         Car?    @relation(fields: [carId], references: [id])
+  carId       String?
+}
+
+model Booking {
+  id              String   @id @default(cuid())
+  Name            String
+  startDate       DateTime
+  endDate         DateTime
+  currrency       String
+  Price           Int
+  pay             Boolean  @default(false)
+  paymentIntentId String   @unique
+  booked          DateTime @default(now())
+  Car             Car?     @relation(fields: [carId], references: [id])
+  carId           String?
 }
