@@ -16,7 +16,7 @@ const UseLocation = () => {
         return City.getAllCities().filter((city)=>city.countryCode === countryCode && city.stateCode === stateCode)
     }
     return{
-        getAllCountries: Country.getAllCountries(),
+        getAllCountries: Country.getAllCountries,
         getCountrybyCode,
         getCountryStates,
         getStateByCode,

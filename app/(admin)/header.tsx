@@ -11,16 +11,17 @@ import { Menu } from "lucide-react";
 const routes = [
     {
         href: "/dashboard",
-        label: "Dashboard",
+        label: "View All",
+    },
+    {
+        href: "/Car/new",
+        label: "Add Car",
     },
     {
         href: "/transactions",
         label: "Transactions",
     },
-    {
-        href: "/accounts",
-        label: "Accounts",
-    },
+
     {
         href: "/categories",
         label: "Categories",
@@ -46,8 +47,8 @@ const Header = () => {
                     <Button
                         variant="outline"
                         size="sm"
-                        className="font-normal bg-white/10 hover:bg-white/20 hover:text-white border-none focus-visible:ring-offset-0 focus-visible:ring-transparent outline-none text-white  focus:bg-white/30 transition">
-                        <Menu className="w-4 h-4" />
+                        className="font-normal border-none focus-visible:ring-offset-0 focus-visible:ring-transparent outline-none transition">
+                        <Menu className="size-4" />
                     </Button>
                 </SheetTrigger>
                 <SheetContent side="left" className="px-2">
@@ -71,7 +72,7 @@ const Header = () => {
         <div className="px-4 py-8">
             <div className="w-full flex items-center justify-between">
                 <div className="flex items-center lg:gap-x-16">
-                    <Link href="/">
+                    <Link href="/chat">
                         Chat
                     </Link>
                     <nav className="hidden lg:flex itmes -center gap-x-2 overflow-x-auto ">

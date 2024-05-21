@@ -5,7 +5,7 @@ import { UploadThingError } from "uploadthing/server";
  
 const f = createUploadthing();
   export const ourFileRouter = {
-  imageUploader: f({ image: { maxFileSize: "4MB" } })
+  imageUploader: f({ image: { maxFileSize: "8MB" } })
     .middleware(async ({ req }) => {
         const session = (await auth()) as Session
         if (!session) throw new UploadThingError("Unauthorized");

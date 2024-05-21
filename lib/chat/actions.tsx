@@ -144,15 +144,11 @@ async function submitUserMessage(content: string) {
   let textNode: undefined | React.ReactNode
   const cars = await db.car.findMany({
     select: {
-      id: true,
-      username: true,
-      brand: true,
+      title: true,
       rental: true,
-      imageUrl: true,
-      carplate: true,
-      comment: true,
-      commenter: true
-
+      image: true,
+      brand: true,
+      id: true,
     }
   })
   const cararray = JSON.stringify(cars);
@@ -269,12 +265,8 @@ Besides that, you can also chat with users and do some calculations if needed.`
           brand: z.string().describe('The brand of the Rental'),
           image: z.string().describe('The image of the Rental'),
           name: z.string().describe('The name of the Rental'),
-          comment: z.string().describe('The comment of the Rental'),
-          commenter: z.string().describe('The commenter of the Rental'),
-          description: z.string().describe('The description of the Rental'),
-          carplate: z.string().describe('The carplate of the Rental'),
         }),
-        render: async function* ({ symbol, price, brand, image, name, comment, commenter, description, carplate }) {
+        render: async function* ({ symbol, price, brand, image, name }) {
           yield (
             <BotCard>
               <RentalSkeleton />
@@ -291,14 +283,14 @@ Besides that, you can also chat with users and do some calculations if needed.`
                 id: nanoid(),
                 role: 'function',
                 name: 'showRentalPrice',
-                content: JSON.stringify({ symbol, price, image, name, brand, comment, commenter, description, carplate })
+                content: JSON.stringify({ symbol, price, image, name, brand })
               }
             ]
           })
 
           return (
             <BotCard>
-              <Rental props={{ symbol, price, image, name, brand, comment, commenter, description, carplate }} />
+              <Rental props={{ symbol, price, image, name, brand }} />
             </BotCard>
           )
         }

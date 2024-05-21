@@ -3,6 +3,7 @@
 import { useActions, useUIState } from 'ai/rsc'
 
 import type { AI } from '@/lib/chat/actions'
+import Image from 'next/image'
 
 interface Rental {
   symbol: string
@@ -31,7 +32,7 @@ export function Rentals({ props: Rentals }: { props: Rental[] }) {
               <div className="bold uppercase text-zinc-300">{Rental.symbol}</div>
               <div className="bold uppercase text-zinc-300">${Rental.price} / Day</div>
               <div  className='rounded-xl'>
-                <img src={Rental.image}></img>
+                <img src={Rental.image} alt={Rental.name}></img>
               </div>
             </div>
           </button>

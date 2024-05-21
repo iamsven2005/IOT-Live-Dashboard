@@ -28,6 +28,8 @@ model Car {
   country     String
   state       String
   city        String
+  charge      String
+  drive       String
   bookings    Booking[]
   sensors     Sensor[] //rooms
 }
@@ -36,9 +38,9 @@ model Sensor {
   id          String  @id @default(cuid())
   title       String
   description String
-  threshold   String
+  threshold   Int
   image       String
-  Car         Car?    @relation(fields: [carId], references: [id])
+  Car         Car?    @relation(fields: [carId], references: [id], onDelete: Cascade)
   carId       String?
 }
 
@@ -47,11 +49,11 @@ model Booking {
   Name            String
   startDate       DateTime
   endDate         DateTime
-  currrency       String
-  Price           Int
+  currency       String
+  amount           Int
   pay             Boolean  @default(false)
   paymentIntentId String   @unique
   booked          DateTime @default(now())
-  Car             Car?     @relation(fields: [carId], references: [id])
+  Car             Car?     @relation(fields: [carId], references: [id], onDelete: Cascade)
   carId           String?
 }
