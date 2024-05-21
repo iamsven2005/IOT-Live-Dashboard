@@ -1,5 +1,4 @@
 "use client"
-import RentalPaymentForm from "./Payment";
 import BookClient from "./listbook";
 
 const BookCar = () => {

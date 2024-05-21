@@ -1,6 +1,6 @@
 import { db } from "@/lib/db"
 import { toast } from "sonner"
-
+import {auth} from "@/auth"
 export const getCars = async(searchParams: {
     title: string
     country: string

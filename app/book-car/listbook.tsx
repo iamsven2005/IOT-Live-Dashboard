@@ -1,13 +1,11 @@
 "use client"
 import useBook from "@/lib/hooks/useBook"
 import {StripeElementsOptions, loadStripe} from "@Stripe/stripe-js"
-import { CarCard } from "../(admin)/CarCard"
 import { Elements } from '@stripe/react-stripe-js';
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card"
 import { useTheme } from "next-themes"
 import RentalPaymentForm from "./Payment"
 import { useEffect, useState } from "react"
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 const BookClient = () => {
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string)
