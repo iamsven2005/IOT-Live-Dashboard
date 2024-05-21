@@ -66,7 +66,7 @@ dependencies:
     version: 1.0.7(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
   '@stripe/react-stripe-js':
     specifier: github:stripe/react-stripe-js
-    version: 2.7.1(@stripe/stripe-js@3.4.1)(react-dom@18.2.0)(react@18.2.0)
+    version: github.com/stripe/react-stripe-js/ace5288fda1387c836923da0c25c9143f843c240(@stripe/stripe-js@3.4.1)(react-dom@18.2.0)(react@18.2.0)
   '@stripe/stripe-js':
     specifier: github:Stripe/stripe-js
     version: github.com/Stripe/stripe-js/2f83e4e3826fa1ce363fffc454236d1dea66f629
@@ -2383,19 +2383,6 @@ packages:
     dependencies:
       fflate: 0.7.4
       string.prototype.codepointat: 0.2.1
-    dev: false
-
-  /@stripe/react-stripe-js@2.7.1(@stripe/stripe-js@3.4.1)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-/i13alp27HaSBbMM6kW0jhy8KqdtOL1T/EcRjFjfhvt+CBtMEg8TD7y28W3oZG0+OBDdCyGGnXgNgrKPYQH40g==}
-    peerDependencies:
-      '@stripe/stripe-js': ^1.44.1 || ^2.0.0 || ^3.0.0
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-    dependencies:
-      '@stripe/stripe-js': github.com/Stripe/stripe-js/2f83e4e3826fa1ce363fffc454236d1dea66f629
-      prop-types: 15.8.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /@swc/helpers@0.5.2:
@@ -8301,6 +8288,22 @@ packages:
     name: '@stripe/stripe-js'
     version: 3.4.1
     engines: {node: '>=12.16'}
+    dev: false
+
+  github.com/stripe/react-stripe-js/ace5288fda1387c836923da0c25c9143f843c240(@stripe/stripe-js@3.4.1)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {tarball: https://codeload.github.com/stripe/react-stripe-js/tar.gz/ace5288fda1387c836923da0c25c9143f843c240}
+    id: github.com/stripe/react-stripe-js/ace5288fda1387c836923da0c25c9143f843c240
+    name: '@stripe/react-stripe-js'
+    version: 2.7.1
+    peerDependencies:
+      '@stripe/stripe-js': ^1.44.1 || ^2.0.0 || ^3.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@stripe/stripe-js': github.com/Stripe/stripe-js/2f83e4e3826fa1ce363fffc454236d1dea66f629
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
 settings:
