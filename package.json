@@ -14,7 +14,8 @@
     "gen": "prisma generate",
     "mig": "prisma db push",
     "stu": "prisma studio",
-    "e": "echo e"
+    "e": "echo e",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@auth/core": "^0.31.0",
