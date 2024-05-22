@@ -1,6 +1,6 @@
 "use client"
 import useBook from "@/lib/hooks/useBook"
-import {StripeElementsOptions, loadStripe} from "@Stripe/stripe-js"
+import {StripeElementsOptions, loadStripe} from "@stripe/stripe-js"
 import { Elements } from '@stripe/react-stripe-js';
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card"
 import { useTheme } from "next-themes"
