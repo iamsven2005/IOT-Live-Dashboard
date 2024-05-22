@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { Session } from "@/lib/types";
 import { NextResponse } from "next/server";
 import Search from "@/actions/Search";
+import { redirect } from "next/navigation";
 
 
 interface Props {
@@ -22,7 +23,7 @@ export default async function Home({ searchParams }: Props) {
   }
   const session = (await auth()) as Session
   if (!session) {
-    return new NextResponse("unauthorized", { status: 401 })
+    return redirect("/login")
   }
   const id = session.user.id
   return (<div className="flex flex-col">
