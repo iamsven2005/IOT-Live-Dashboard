@@ -7,6 +7,8 @@ import { getChat, getMissingKeys } from '@/app/actions'
 import { Chat } from '@/components/chat'
 import { AI } from '@/lib/chat/actions'
 import { Session } from '@/lib/types'
+import Link from 'next/link'
+import { Button } from '@/components/ui/button'
 
 export interface ChatPageProps {
   params: {
@@ -40,12 +42,21 @@ export default async function ChatPage({ params }: ChatPageProps) {
 
   return (
     <AI initialAIState={{ chatId: chat.id, messages: chat.messages }}>
+           <div className='flex flex-col'>
+           <div className='container m-5 text-center'>
+            <div className=''>
+            You are currently in a old chat, click here to see past chats. What ever you type in the past would be remembered.
+            </div>
+            <Link href={`/share/${chat.id}`} ><Button> View History</Button></Link>
+            </div>
+
       <Chat
         id={chat.id}
         session={session}
         initialMessages={chat.messages}
         missingKeys={await getMissingKeys()}
       />
+                  </div> 
     </AI>
   )
 }

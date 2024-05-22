@@ -24,6 +24,6 @@ export const getCars = async(searchParams: {
     })
     return cars
 }catch(error){
-        toast.error("Cannot get cars right now, something went wrong.")
+        console.log(error)
     }
 }

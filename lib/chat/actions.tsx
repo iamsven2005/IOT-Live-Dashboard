@@ -1,5 +1,4 @@
-
-import 'server-only'
+import 'server-only';
 
 import {
   createAI,
@@ -7,9 +6,9 @@ import {
   getMutableAIState,
   getAIState,
   render,
-  createStreamableValue
-} from 'ai/rsc'
-import OpenAI from 'openai'
+  createStreamableValue,
+} from 'ai/rsc';
+import OpenAI from 'openai';
 
 import {
   spinner,
@@ -17,35 +16,35 @@ import {
   BotMessage,
   SystemMessage,
   Rental,
-  Purchase
-} from '@/components/rentals'
+  Purchase,
+} from '@/components/rentals';
 
-import { z } from 'zod'
-import { EventsSkeleton } from '@/components/rentals/events-skeleton'
-import { Events } from '@/components/rentals/events'
-import { RentalsSkeleton } from '@/components/rentals/Rentals-skeleton'
-import { Rentals } from '@/components/rentals/Rentals'
-import { RentalSkeleton } from '@/components/rentals/Rental-skeleton'
+import { z } from 'zod';
+import { EventsSkeleton } from '@/components/rentals/events-skeleton';
+import { Events } from '@/components/rentals/events';
+import { RentalsSkeleton } from '@/components/rentals/Rentals-skeleton';
+import { Rentals } from '@/components/rentals/Rentals';
+import { RentalSkeleton } from '@/components/rentals/Rental-skeleton';
 import {
   formatNumber,
   runAsyncFnWithoutBlocking,
   sleep,
-  nanoid
-} from '@/lib/utils'
-import { saveChat } from '@/app/actions'
-import { SpinnerMessage, UserMessage } from '@/components/rentals/message'
-import { Chat } from '@/lib/types'
-import { auth } from '@/auth'
-import { db } from '../db'
+  nanoid,
+} from '@/lib/utils';
+import { saveChat } from '@/app/actions';
+import { SpinnerMessage, UserMessage } from '@/components/rentals/message';
+import { Chat } from '@/lib/types';
+import { auth } from '@/auth';
+import { db } from '../db';
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || ''
-})
+  apiKey: process.env.OPENAI_API_KEY || '',
+});
 
-async function confirmPurchase(symbol: string, price: number, amount: number) {
-  'use server'
+async function confirmPurchase(symbol: string, price: number, amount: number): Promise<{ purchasingUI: React.ReactNode; newMessage: { id: string; display: React.ReactNode } }> {
+  'use server';
 
-  const aiState = getMutableAIState<typeof AI>()
+  const aiState = getMutableAIState<typeof AI>();
 
   const purchasing = createStreamableUI(
     <div className="inline-flex items-start gap-1 md:items-center">
@@ -54,12 +53,12 @@ async function confirmPurchase(symbol: string, price: number, amount: number) {
         Purchasing {amount} ${symbol}...
       </p>
     </div>
-  )
+  );
 
-  const systemMessage = createStreamableUI(null)
+  const systemMessage = createStreamableUI(null);
 
   runAsyncFnWithoutBlocking(async () => {
-    await sleep(1000)
+    await sleep(1000);
 
     purchasing.update(
       <div className="inline-flex items-start gap-1 md:items-center">
@@ -68,25 +67,23 @@ async function confirmPurchase(symbol: string, price: number, amount: number) {
           Purchasing {amount} ${symbol}... working on it...
         </p>
       </div>
-    )
+    );
 
-    await sleep(1000)
+    await sleep(1000);
 
     purchasing.done(
       <div>
         <p className="mb-2">
-          You have successfully purchased {amount} ${symbol}. Total cost:{' '}
-          {formatNumber(amount * price)}
+          You have successfully purchased {amount} ${symbol}. Total cost: {formatNumber(amount * price)}
         </p>
       </div>
-    )
+    );
 
     systemMessage.done(
       <SystemMessage>
-        You have purchased {amount} Days of {symbol} at ${price}. Total cost ={' '}
-        {formatNumber(amount * price)}.
+        You have purchased {amount} Days of {symbol} at ${price}. Total cost = {formatNumber(amount * price)}.
       </SystemMessage>
-    )
+    );
 
     aiState.done({
       ...aiState.get(),
@@ -100,33 +97,31 @@ async function confirmPurchase(symbol: string, price: number, amount: number) {
             symbol,
             price,
             defaultAmount: amount,
-            status: 'completed'
-          })
+            status: 'completed',
+          }),
         },
         {
           id: nanoid(),
           role: 'system',
-          content: `[User has purchased ${amount} Days of ${symbol} at ${price}. Total cost = ${
-            amount * price
-          }]`
-        }
-      ]
-    })
-  })
+          content: `[User has purchased ${amount} Days of ${symbol} at ${price}. Total cost = ${amount * price}]`,
+        },
+      ],
+    });
+  });
 
   return {
     purchasingUI: purchasing.value,
     newMessage: {
       id: nanoid(),
-      display: systemMessage.value
-    }
-  }
+      display: systemMessage.value,
+    },
+  };
 }
 
-async function submitUserMessage(content: string) {
-  'use server'
+async function submitUserMessage(content: string): Promise<{ id: string; display: React.ReactNode }> {
+  'use server';
 
-  const aiState = getMutableAIState<typeof AI>()
+  const aiState = getMutableAIState<typeof AI>();
 
   aiState.update({
     ...aiState.get(),
@@ -135,13 +130,13 @@ async function submitUserMessage(content: string) {
       {
         id: nanoid(),
         role: 'user',
-        content
-      }
-    ]
-  })
+        content,
+      },
+    ],
+  });
 
-  let textStream: undefined | ReturnType<typeof createStreamableValue<string>>
-  let textNode: undefined | React.ReactNode
+  let textStream: ReturnType<typeof createStreamableValue<string>> | undefined;
+  let textNode: React.ReactNode | undefined;
   const cars = await db.car.findMany({
     select: {
       title: true,
@@ -149,9 +144,9 @@ async function submitUserMessage(content: string) {
       image: true,
       brand: true,
       id: true,
-    }
-  })
-  const cararray = JSON.stringify(cars);
+    },
+  });
+  const carArray = JSON.stringify(cars);
   const ui = render({
     model: 'gpt-3.5-turbo',
     provider: openai,
@@ -161,7 +156,7 @@ async function submitUserMessage(content: string) {
         role: 'system',
         content: `\
 You are a Car Rental conversation bot and you can help users buy Rentals, step by step.
-You and the user can discuss Rental prices and the user can adjust the amount of time for  Car Rentals they want to buy, or place an order, in the UI.
+You and the user can discuss Rental prices and the user can adjust the amount of time for Car Rentals they want to buy, or place an order, in the UI.
 
 Messages inside [] means that it's a UI element or a user event. For example:
 - "[Price of Prius = 100]" means that an interface of the Rental price of Prius is shown to the user.
@@ -175,24 +170,24 @@ If you want to show events, call \`get_events\`.
 If the user wants to sell Rental, or complete another impossible task, respond that you are a 
 demo and cannot do that.
 
-Current cars available are ${cararray}
+Current cars available are ${carArray}
 
-Besides that, you can also chat with users and do some calculations if needed.`
+Besides that, you can also chat with users and do some calculations if needed.`,
       },
       ...aiState.get().messages.map((message: any) => ({
         role: message.role,
         content: message.content,
-        name: message.name
-      }))
+        name: message.name,
+      })),
     ],
     text: ({ content, done, delta }) => {
       if (!textStream) {
-        textStream = createStreamableValue('')
-        textNode = <BotMessage content={textStream.value} />
+        textStream = createStreamableValue('');
+        textNode = <BotMessage content={textStream.value} />;
       }
 
       if (done) {
-        textStream.done()
+        textStream.done();
         aiState.done({
           ...aiState.get(),
           messages: [
@@ -200,37 +195,37 @@ Besides that, you can also chat with users and do some calculations if needed.`
             {
               id: nanoid(),
               role: 'assistant',
-              content
-            }
-          ]
-        })
+              content,
+            },
+          ],
+        });
       } else {
-        textStream.update(delta)
+        textStream.update(delta);
       }
 
-      return textNode
+      return textNode;
     },
     functions: {
       listRentals: {
-        description: 'List all cars that are avaliable as well as their respective image url',
+        description: 'List all cars that are available as well as their respective image URL',
         parameters: z.object({
           rentals: z.array(
             z.object({
               symbol: z.string().describe('The brand of the Rental'),
               price: z.number().describe('The price of the Rental'),
               name: z.string().describe('The name of the rental'),
-              image: z.string().describe('The image url of the rental')
+              image: z.string().describe('The image URL of the rental'),
             })
-          )
+          ),
         }),
         render: async function* ({ rentals }) {
           yield (
             <BotCard>
               <RentalsSkeleton />
             </BotCard>
-          )
+          );
 
-          await sleep(1000)
+          await sleep(1000);
 
           aiState.done({
             ...aiState.get(),
@@ -240,27 +235,22 @@ Besides that, you can also chat with users and do some calculations if needed.`
                 id: nanoid(),
                 role: 'function',
                 name: 'listRentals',
-                content: JSON.stringify(rentals)
-              }
-            ]
-          })
+                content: JSON.stringify(rentals),
+              },
+            ],
+          });
 
           return (
             <BotCard>
               <Rentals props={rentals} />
             </BotCard>
-          )
-        }
+          );
+        },
       },
       showRentalPrice: {
-        description:
-          'Get the current Rental price of a given Car Rental or currency. Use this to show the price to the user.',
+        description: 'Get the current Rental price of a given Car Rental or currency. Use this to show the price to the user.',
         parameters: z.object({
-          symbol: z
-            .string()
-            .describe(
-              'The name or symbol of the Rental or currency. e.g. BMW/Honda/SGD.'
-            ),
+          symbol: z.string().describe('The name or symbol of the Rental or currency. e.g. BMW/Honda/SGD.'),
           price: z.number().describe('The price of the Rental.'),
           brand: z.string().describe('The brand of the Rental'),
           image: z.string().describe('The image of the Rental'),
@@ -271,9 +261,9 @@ Besides that, you can also chat with users and do some calculations if needed.`
             <BotCard>
               <RentalSkeleton />
             </BotCard>
-          )
+          );
 
-          await sleep(1000)
+          await sleep(1000);
 
           aiState.done({
             ...aiState.get(),
@@ -283,33 +273,24 @@ Besides that, you can also chat with users and do some calculations if needed.`
                 id: nanoid(),
                 role: 'function',
                 name: 'showRentalPrice',
-                content: JSON.stringify({ symbol, price, image, name, brand })
-              }
-            ]
-          })
+                content: JSON.stringify({ symbol, price, image, name, brand }),
+              },
+            ],
+          });
 
           return (
             <BotCard>
               <Rental props={{ symbol, price, image, name, brand }} />
             </BotCard>
-          )
-        }
+          );
+        },
       },
       showRentalPurchase: {
-        description:
-          'Show price and the UI to purchase a Car Rental or currency. Use this if the user wants to purchase a Car Rental or currency.',
+        description: 'Show price and the UI to purchase a Car Rental or currency. Use this if the user wants to purchase a Car Rental or currency.',
         parameters: z.object({
-          symbol: z
-            .string()
-            .describe(
-              'The name or symbol of the Rental or currency. e.g. BMW/Mazda/USD.'
-            ),
+          symbol: z.string().describe('The name or symbol of the Rental or currency. e.g. BMW/Mazda/USD.'),
           price: z.number().describe('The price of the Rental.'),
-          numberOfDays: z
-            .number()
-            .describe(
-              'The **number of Days** for a Rental or currency to purchase. Can be optional if the user did not specify it.'
-            )
+          numberOfDays: z.number().describe('The **number of Days** for a Rental or currency to purchase. Can be optional if the user did not specify it.'),
         }),
         render: async function* ({ symbol, price, numberOfDays = 100 }) {
           if (numberOfDays <= 0 || numberOfDays > 1000) {
@@ -320,12 +301,12 @@ Besides that, you can also chat with users and do some calculations if needed.`
                 {
                   id: nanoid(),
                   role: 'system',
-                  content: `[User has selected an invalid amount]`
-                }
-              ]
-            })
+                  content: `[User has selected an invalid amount]`,
+                },
+              ],
+            });
 
-            return <BotMessage content={'Invalid amount'} />
+            return <BotMessage content={'Invalid amount'} />;
           }
 
           aiState.done({
@@ -339,11 +320,11 @@ Besides that, you can also chat with users and do some calculations if needed.`
                 content: JSON.stringify({
                   symbol,
                   price,
-                  numberOfDays
-                })
-              }
-            ]
-          })
+                  numberOfDays,
+                }),
+              },
+            ],
+          });
 
           return (
             <BotCard>
@@ -352,35 +333,32 @@ Besides that, you can also chat with users and do some calculations if needed.`
                   numberOfDays,
                   symbol,
                   price: +price,
-                  status: 'requires_action'
+                  status: 'requires_action',
                 }}
               />
             </BotCard>
-          )
-        }
+          );
+        },
       },
       getEvents: {
-        description:
-          'List funny imaginary events between user highlighted dates that describe Rental activity.',
+        description: 'List funny imaginary events between user highlighted dates that describe Rental activity.',
         parameters: z.object({
           events: z.array(
             z.object({
-              date: z
-                .string()
-                .describe('The date of the event, in ISO-8601 format'),
+              date: z.string().describe('The date of the event, in ISO-8601 format'),
               headline: z.string().describe('The headline of the event'),
-              description: z.string().describe('The description of the event')
+              description: z.string().describe('The description of the event'),
             })
-          )
+          ),
         }),
         render: async function* ({ events }) {
           yield (
             <BotCard>
               <EventsSkeleton />
             </BotCard>
-          )
+          );
 
-          await sleep(1000)
+          await sleep(1000);
 
           aiState.done({
             ...aiState.get(),
@@ -390,79 +368,63 @@ Besides that, you can also chat with users and do some calculations if needed.`
                 id: nanoid(),
                 role: 'function',
                 name: 'getEvents',
-                content: JSON.stringify(events)
-              }
-            ]
-          })
+                content: JSON.stringify(events),
+              },
+            ],
+          });
 
           return (
             <BotCard>
               <Events props={events} />
             </BotCard>
-          )
-        }
-      }
-    }
-  })
+          );
+        },
+      },
+    },
+  });
 
   return {
     id: nanoid(),
-    display: ui
-  }
+    display: ui,
+  };
 }
 
 export type Message = {
-  role: 'user' | 'assistant' | 'system' | 'function' | 'data' | 'tool'
-  content: string
-  id: string
-  name?: string
-}
+  role: 'user' | 'assistant' | 'system' | 'function' | 'data' | 'tool';
+  content: string;
+  id: string;
+  name?: string;
+};
 
 export type AIState = {
-  chatId: string
-  messages: Message[]
-}
+  chatId: string;
+  messages: Message[];
+};
 
 export type UIState = {
-  id: string
-  display: React.ReactNode
-}[]
+  id: string;
+  display: React.ReactNode;
+}[];
 
 export const AI = createAI<AIState, UIState>({
   actions: {
     submitUserMessage,
-    confirmPurchase
+    confirmPurchase,
   },
   initialUIState: [],
   initialAIState: { chatId: nanoid(), messages: [] },
-  unstable_onGetUIState: async () => {
-    'use server'
+  onSetAIState: async ({ state, done }) => {
+    'use server';
 
-    const session = await auth()
-
-    if (session && session.user) {
-      const aiState = getAIState()
-
-      if (aiState) {
-        const uiState = getUIStateFromAIState(aiState)
-        return uiState
-      }
-    } else {
-      return
-    }
-  },
-  unstable_onSetAIState: async ({ state, done }) => {
-    'use server'
-
-    const session = await auth()
+    const session = await auth();
 
     if (session && session.user) {
-      const { chatId, messages } = state
+      const { chatId, messages } = state;
 
-      const createdAt = new Date()
-      const userId = session.user.id as string
-      const path = `/chat/${chatId}`
-      const title = messages[0].content.substring(0, 100)
+      const createdAt = new Date();
+      const userId = session.user.id as string;
+      const path = `/chat/${chatId}`;
+      const title = messages[0].content.substring(0, 100);
 
       const chat: Chat = {
         id: chatId,
@@ -470,19 +432,19 @@ export const AI = createAI<AIState, UIState>({
         userId,
         createdAt,
         messages,
-        path
-      }
+        path,
+      };
 
-      await saveChat(chat)
+      await saveChat(chat);
     } else {
-      return
+      return;
     }
-  }
-})
+  },
+});
 
-export const getUIStateFromAIState = (aiState: Chat) => {
+export const getUIStateFromAIState = (aiState: Chat): UIState => {
   return aiState.messages
-    .filter(message => message.role !== 'system')
+    .filter((message) => message.role !== 'system')
     .map((message, index) => ({
       id: `${aiState.chatId}-${index}`,
       display:
@@ -508,6 +470,6 @@ export const getUIStateFromAIState = (aiState: Chat) => {
           <UserMessage>{message.content}</UserMessage>
         ) : (
           <BotMessage content={message.content} />
-        )
-    }))
-}
+        ),
+    }));
+};

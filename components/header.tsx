@@ -29,7 +29,7 @@ async function UserOrLogin() {
           <SidebarToggle />
         </>
       ) : (
-        <Link href="/new" rel="nofollow">
+        <Link href="/chat" rel="nofollow">
           <Plus className="size-6 mr-2 dark:hidden" />
           <Plus className="hidden size-6 mr-2 dark:block" />
         </Link>
