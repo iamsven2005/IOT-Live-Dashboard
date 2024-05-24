@@ -36,6 +36,8 @@ import { SpinnerMessage, UserMessage } from '@/components/rentals/message';
 import { Chat } from '@/lib/types';
 import { auth } from '@/auth';
 import { db } from '../db';
+import Mybookings from '@/app/bookings/Booked';
+import BookClient from '@/app/book-car/listbook';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || '',
@@ -166,7 +168,7 @@ If the user requests purchasing a Rental, call \`show_Rental_purchase_ui\` to sh
 If the user just wants the price, call \`show_Rental_price\` to show the price.
 If you want to show trending Rentals, call \`list_Rentals\`.
 If you want to show other trending Rentals, call \`list_Rentals\`.
-If you want to show events, call \`get_events\`.
+If you want to show events or show booking, call \`get_events\`.
 If the user wants to sell Rental, or complete another impossible task, respond that you are a 
 demo and cannot do that.
 
@@ -215,6 +217,7 @@ Besides that, you can also chat with users and do some calculations if needed.`,
               price: z.number().describe('The price of the Rental'),
               name: z.string().describe('The name of the rental'),
               image: z.string().describe('The image URL of the rental'),
+              id: z.string().describe('The image URL of the rental'),
             })
           ),
         }),
@@ -255,8 +258,9 @@ Besides that, you can also chat with users and do some calculations if needed.`,
           brand: z.string().describe('The brand of the Rental'),
           image: z.string().describe('The image of the Rental'),
           name: z.string().describe('The name of the Rental'),
+          id: z.string().describe('The id of the Rental'),
         }),
-        render: async function* ({ symbol, price, brand, image, name }) {
+        render: async function* ({ symbol, price, brand, image, name, id }) {
           yield (
             <BotCard>
               <RentalSkeleton />
@@ -273,14 +277,14 @@ Besides that, you can also chat with users and do some calculations if needed.`,
                 id: nanoid(),
                 role: 'function',
                 name: 'showRentalPrice',
-                content: JSON.stringify({ symbol, price, image, name, brand }),
+                content: JSON.stringify({ symbol, price, image, name, brand, id }),
               },
             ],
           });
 
           return (
             <BotCard>
-              <Rental props={{ symbol, price, image, name, brand }} />
+              <Rental props={{ symbol, price, image, name, brand, id }} />
             </BotCard>
           );
         },
@@ -376,6 +380,7 @@ Besides that, you can also chat with users and do some calculations if needed.`,
           return (
             <BotCard>
               <Events props={events} />
+              <Mybookings/>
             </BotCard>
           );
         },
@@ -464,6 +469,7 @@ export const getUIStateFromAIState = (aiState: Chat): UIState => {
           ) : message.name === 'getEvents' ? (
             <BotCard>
               <Events props={JSON.parse(message.content)} />
+              <Mybookings/>
             </BotCard>
           ) : null
         ) : message.role === 'user' ? (

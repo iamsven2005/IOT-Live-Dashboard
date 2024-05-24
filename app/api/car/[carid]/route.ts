@@ -19,20 +19,21 @@ export async function PATCH(req: Request, {params}: {params: {carid: string}}){
         return new NextResponse("Internal server error", {status: 500})
     }
 }
-export async function DELETE(req: Request, {params}: {params: {carid: string}}){
-    try{
-        const body = await req.json()
-        if(!params.carid){
-            return new NextResponse("car id is required", {status: 400})
+export async function DELETE(req: Request, { params }: { params: { carid: string } }) {
+    try {
+        if (!params.carid) {
+            return new NextResponse("Car id is required", { status: 400 });
         }
-        const car = await db.car.delete({
-            where:{
-                id: params.carid, 
-            }
-        })
-        return NextResponse.json(car)
-    } catch(error){
-        console.log("car/carid:DELETE :",error)
-        return new NextResponse("Internal server error", {status: 500})
+
+        const sensor = await db.car.delete({
+            where: {
+                id: params.carid,
+            },
+        });
+
+        return NextResponse.json(sensor);
+    } catch (error) {
+        console.error("car/carid:DELETE:", error);
+        return new NextResponse("Internal server error", { status: 500 });
     }
 }

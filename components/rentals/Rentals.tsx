@@ -10,6 +10,7 @@ interface Rental {
   price: number
   name: string
   image: string
+  id: string
 }
 
 export function Rentals({ props: Rentals }: { props: Rental[] }) {
@@ -34,6 +35,7 @@ export function Rentals({ props: Rentals }: { props: Rental[] }) {
               <div  className='rounded-xl'>
                 <img src={Rental.image} alt={Rental.name}></img>
               </div>
+              Car Id: {Rental.id}
             </div>
           </button>
         ))}

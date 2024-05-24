@@ -5,6 +5,7 @@ import { useActions, useAIState, useUIState } from 'ai/rsc'
 import { formatNumber } from '@/lib/utils'
 
 import type { AI } from '@/lib/chat/actions'
+import BookClient from '@/app/book-car/listbook'
 
 interface Purchase {
   numberOfDays?: number
@@ -40,12 +41,9 @@ export function Purchase({
         newValue * price
       ).toFixed(2)}]`,
 
-      // Identifier of this UI component, so we don't insert it many times.
       id
     }
 
-    // If last history state is already this info, update it. This is to avoid
-    // adding every slider change to the history.
     if (aiState.messages[aiState.messages.length - 1]?.id === id) {
       setAIState({
         ...aiState,
@@ -67,6 +65,7 @@ export function Purchase({
         <div className="mt-4 text-zinc-200">{purchasingUI}</div>
       ) : status === 'requires_action' ? (
         <>
+          <BookClient/>
           <div className="relative mt-6 pb-6">
             <p>Days to purchase</p>
             <input
@@ -127,7 +126,7 @@ export function Purchase({
               ])
             }}
           >
-            Purchase
+            Set Reminder
           </button>
         </>
       ) : status === 'completed' ? (

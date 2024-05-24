@@ -63,7 +63,7 @@ export const AddFormSensor = ({ car, sensors, handledialogOpen }: Props) => {
   function onSubmit(values: z.infer<typeof FormSchema>) {
     setIsloading(true);
     if (car && sensors) {
-      axios.patch(`/api/room/${sensors.id}`, values).then((res) => {
+      axios.patch(`/api/sensors/${sensors.id}`, values).then((res) => {
         toast.success("Car updated");
         router.refresh();
         setIsloading(false);

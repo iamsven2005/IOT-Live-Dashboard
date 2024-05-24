@@ -7,6 +7,7 @@ import { useTheme } from "next-themes"
 import RentalPaymentForm from "./Payment"
 import { useEffect, useState } from "react"
 import Image from "next/image";
+import Link from "next/link";
 const BookClient = () => {
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string)
 const {bookingData, clientSecret}= useBook()
@@ -26,15 +27,16 @@ const [paymentSuccess, setPaymentSuccess] = useState(false)
 const handlePaymentSuccess = (value: boolean) => {
     setPaymentSuccess(value)
 }
-if (!paymentSuccess && (!bookingData || !clientSecret) ) return <div className="text-center">Payment Failed ...You might have cancelled your order.</div>
-if(paymentSuccess) return <div className="text-center">Payment Success!</div>
+if (!paymentSuccess && (!bookingData || !clientSecret) ) return <div className="text-center flex flex-col"><div className="text-xl">Payment Failed ...You might have cancelled your order.</div><Link href="/bookings">View Bookings.</Link></div>
+if(paymentSuccess) return <div className="text-center flex flex-col"><div className="text-xl">
+  Payment Success!</div><Link href="/bookings">View Bookings.</Link></div>
 
     return ( 
         <div className="max-w-[700px] mx-auto"> 
         {clientSecret && bookingData &&
     <div className="mb-6">
         <h3 className="text-2xl font-semibold">
-            Complete paymenmt to reserve this rental!
+            Complete payment to reserve this rental!
         </h3>
         <div>
         <Card className="w-full max-w-md">

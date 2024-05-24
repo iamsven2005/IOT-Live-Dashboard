@@ -27,8 +27,8 @@ const routes = [
         label: "Categories",
     },
     {
-        href: "/settings",
-        label: "Settings"
+        href: "/",
+        label: "Home"
     }
 ]
 const Header = () => {

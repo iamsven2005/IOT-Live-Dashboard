@@ -1,6 +1,6 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Car, Sensor } from "@prisma/client";
+import { Booking, Car, Sensor } from "@prisma/client";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -28,6 +28,7 @@ interface Props {
 
 export type CarSensor = Car & {
   sensors: Sensor[];
+  bookings: Booking[];
 };
 
 const formSchema = z.object({
@@ -146,7 +147,7 @@ const AddForm = ({ car }: Props) => {
       await axios.delete(`/api/car/${car.id}`);
       setisDeleting(false);
       toast.success("Car deleted");
-      router.push("/car/new");
+      router.push("/Car/new");
     } catch (error: any) {
       console.log(error);
       setisDeleting(false);
