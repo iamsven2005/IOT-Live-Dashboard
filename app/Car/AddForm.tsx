@@ -18,9 +18,9 @@ import { ICity, IState } from "country-state-city";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { AddFormSensor } from "../../sensors/AddSensorsForm";
+import { AddFormSensor } from "../sensors/AddSensorsForm";
 import { Separator } from "@/components/ui/separator";
-import SensorCard from "../../sensors/sensorCard";
+import SensorCard from "../sensors/sensorCard";
 
 interface Props {
   car: CarSensor | null;

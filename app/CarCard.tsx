@@ -9,7 +9,6 @@ import { Booking, Car, Sensor } from "@prisma/client";
 import { AccordionContent } from "@radix-ui/react-accordion";
 import { getStateByCodeAndCountry } from "country-state-city/lib/state";
 import Image from "next/image";
-import { Picker } from "./Picker";
 import { DateRange } from "react-day-picker";
 import React, { useEffect, useState } from "react";
 import { differenceInCalendarDays } from "date-fns";
@@ -17,7 +16,8 @@ import { Loader2, Wand2 } from "lucide-react";
 import { toast } from "sonner";
 import useBook from "@/lib/hooks/useBook";
 import { useRouter } from "next/navigation";
-import useDisabledDates from "../../actions/nah";
+import useDisabledDates from "@/actions/nah";
+import { Picker } from "./Picker";
 
 interface Props {
   car: CarSensor | null;

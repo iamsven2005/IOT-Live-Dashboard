@@ -1,5 +1,5 @@
 import { getCars } from "@/actions/getCars";
-import { CarCard } from "./(admin)/CarCard";
+import { CarCard } from "./CarCard";
 import { auth } from "@/auth";
 import { Session } from "@/lib/types";
 import { NextResponse } from "next/server";
