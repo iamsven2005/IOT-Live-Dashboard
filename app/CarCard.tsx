@@ -134,9 +134,9 @@ export const CarCard = ({ car, id, booking = [] }: Props) => {
             <AccordionTrigger>Sensors</AccordionTrigger>
             <AccordionContent>
               <Carousel className="m-5">
-                <CarouselContent className="w-full m-5">
+                <CarouselContent className="flex aspect-square items-center justify-center p-6">
                   {car?.sensors.map((carse) => (
-                    <Card key={carse.id}>
+                    <Card key={carse.id} className="p-5 w-full">
                       <CardTitle>{carse.title}</CardTitle>
                       <CardDescription>{carse.description}</CardDescription>
                       <Image alt={carse.title} src={carse.image || ""} width={310} height={100} />

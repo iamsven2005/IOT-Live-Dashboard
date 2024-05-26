@@ -32,9 +32,7 @@ export function Rentals({ props: Rentals }: { props: Rental[] }) {
             <div className="flex flex-col">
               <div className="bold uppercase text-zinc-300">{Rental.symbol}</div>
               <div className="bold uppercase text-zinc-300">${Rental.price} / Day</div>
-              <div  className='rounded-xl'>
-                <img src={Rental.image} alt={Rental.name}></img>
-              </div>
+                <Image src={Rental.image} alt={Rental.name} className='w-full aspect-[4/3] overflow-hidden rounded-xl object-cover object-center' width="100" height="50"></Image>
             </div>
           </button>
         ))}

@@ -1,5 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
+import { Button } from "../ui/button"
 
 interface Rental {
   symbol: string
@@ -21,7 +22,7 @@ export function Rental({ props: { symbol, price, brand, image, name, id } }: { p
         {brand} : {name}
       </div>
       <div className="card-body text-zinc-300">
-      <Link href={`/Car/${id}`}>View Info</Link>
+      <Link href={`/Car/${id}`}><Button>View Info</Button></Link>
 
       </div>
       </div>

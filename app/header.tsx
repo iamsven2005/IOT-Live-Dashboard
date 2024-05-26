@@ -18,13 +18,13 @@ const routes = [
         label: "Add Car",
     },
     {
-        href: "/transactions",
-        label: "Transactions",
+        href: "/chat",
+        label: "Chat",
     },
 
     {
-        href: "/categories",
-        label: "Categories",
+        href: "/task",
+        label: "Book appointment",
     },
     {
         href: "/",
@@ -34,13 +34,11 @@ const routes = [
 const Header = () => {
     const [isOpen, setisOpen] = useState(false)
     const router = useRouter()
-    const isMobile = useMedia("(max-width: 1024px)", false)
     const pathname = usePathname()
     const onClick = (href: string) => {
         router.push(href)
         setisOpen(false)
     }
-    if (isMobile) {
         return (
             <Sheet open={isOpen} onOpenChange={setisOpen}>
                 <SheetTrigger>
@@ -68,26 +66,6 @@ const Header = () => {
             </Sheet>
         )
     }
-    return (
-        <div className="px-4 py-8">
-            <div className="w-full flex items-center justify-between">
-                <div className="flex items-center lg:gap-x-16">
-                    <Link href="/chat">
-                        Chat
-                    </Link>
-                    <nav className="hidden lg:flex itmes -center gap-x-2 overflow-x-auto ">
-                        {routes.map((route) => (
-                            <Navbutton
-                                key={route.href}
-                                href={route.href}
-                                label={route.label}
-                                isActive={pathname === route.href} />
-                        ))}
-                    </nav>
-                </div>
-            </div>
-        </div>
-    );
-}
+
 
 export default Header;

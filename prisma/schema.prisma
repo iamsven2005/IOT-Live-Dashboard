@@ -57,3 +57,9 @@ model Booking {
   Car             Car?     @relation(fields: [carId], references: [id], onDelete: Cascade)
   carId           String?
 }
+
+model Training{
+  id              String   @id @default(cuid())
+  Name            String
+  description     String
+}

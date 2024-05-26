@@ -6,7 +6,6 @@ import { cn } from '@/lib/utils'
 import { Providers } from '@/components/providers'
 import { Header as Head1} from '@/components/header'
 import { Toaster } from '@/components/ui/sonner'
-import Header from "./header";
 
 export const metadata = {
   metadataBase: process.env.VERCEL_URL
@@ -55,7 +54,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <div className="flex flex-col min-h-screen">
             <Head1 />
             <main className="flex flex-col flex-1 bg-muted/50">
-            <Header/>
               {children}
               </main>
           </div>

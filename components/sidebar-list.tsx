@@ -3,6 +3,12 @@ import { ClearHistory } from '@/components/clear-history'
 import { SidebarItems } from '@/components/sidebar-items'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { cache } from 'react'
+import { NextResponse } from 'next/server'
+import { auth } from '@/auth'
+import { Session } from '@/lib/types'
+import Header from '@/app/header'
+import Link from 'next/link'
+import { Button } from './ui/button'
 
 interface SidebarListProps {
   userId?: string
@@ -15,9 +21,15 @@ const loadChats = cache(async (userId?: string) => {
 
 export async function SidebarList({ userId }: SidebarListProps) {
   const chats = await loadChats(userId)
-
+  const session = (await auth()) as Session;
+  
+  if (!session) {
+    return new NextResponse("unauthorized", { status: 401 });
+  }
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
+      {session.user.email == process.env.ADMIN  ? <Header/> : <div className='gap-2'><Link href="/bookings" className='m-2'><Button>View Bookings</Button></Link><Link href="/task" className='m-2'><Button>Request for help</Button></Link>
+        </div>}
       <div className="flex-1 overflow-auto">
         {chats?.length ? (
           <div className="space-y-2 px-2">

@@ -20,7 +20,7 @@ const Car = async ({ params }: Props) => {
   if (!session) {
     return new NextResponse("unauthorized", { status: 401 });
   }
-  return (<div className="flex flex-col container">{session.user.email == "iamsven205+dashboard@gmail.com" ?( <AddForm car={car} />) : (<CarCard id={params.Id} car={car} booking={car?.bookings}/>)}
+  return (<div className="flex flex-col container">{session.user.email == process.env.ADMIN ?( <AddForm car={car} />) : (<CarCard id={params.Id} car={car} booking={car?.bookings}/>)}
  </div>);
 };
 
