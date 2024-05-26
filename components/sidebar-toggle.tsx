@@ -16,9 +16,7 @@ export function SidebarToggle() {
       onClick={() => {
         toggleSidebar()
       }}
-    >
-      <IconSidebar className="size-6" />
-      <span className="sr-only">Toggle Sidebar</span>
+    ><span className="sr-only">Toggle Sidebar</span>
     </Button>
   )
 }
