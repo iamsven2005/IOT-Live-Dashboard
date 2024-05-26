@@ -1,7 +1,3 @@
-import Image from "next/image"
-import Link from "next/link"
-import { Button } from "../ui/button"
-
 interface Rental {
   symbol: string
   price: number
@@ -11,22 +7,11 @@ interface Rental {
   id: string
 }
 
-export function Rental({ props: { symbol, price, brand, image, name, id } }: { props: Rental }) {
-  return (
-    <div className="rounded-xl border bg-zinc-950 p-4 ">
-      <div className="text-lg text-zinc-300">{symbol}</div>
-      <div className="text-3xl font-bold text-green-400">${price} / Day</div>
-      <div className="container">
-      <Image src={image} alt={name}className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full" width="550" height="310"></Image>
-      <div className="text-zinc-300">
-        {brand} : {name}
-      </div>
-      <div className="card-body text-zinc-300">
-      <Link href={`/Car/${id}`}><Button>View Info</Button></Link>
+export async function Rental({ props: { symbol, price, brand, image, name, id } }: { props: Rental })
 
-      </div>
-      </div>
-      
-    </div>
+{
+  return (
+      <iframe src={`http://localhost:3000/ViewCar/${id}`} className="w-full rounded-xl border bg-zinc-950 p-4  m-5 h-96"
+      />
   )
 }

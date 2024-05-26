@@ -5,7 +5,7 @@ import { useActions, useAIState, useUIState } from 'ai/rsc'
 import { formatNumber } from '@/lib/utils'
 
 import type { AI } from '@/lib/chat/actions'
-import BookClient from '@/app/book-car/listbook'
+import BookClient from '@/app/(inside)/book-car/listbook'
 
 interface Purchase {
   numberOfDays?: number

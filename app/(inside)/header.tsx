@@ -1,7 +1,7 @@
 "use client"
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Navbutton } from "./nav-button";
+import { Navbutton } from "../nav-button";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useMedia } from "react-use"
@@ -21,10 +21,13 @@ const routes = [
         href: "/chat",
         label: "Chat",
     },
-
     {
-        href: "/task",
+        href: "/support",
         label: "Book appointment",
+    },
+    {
+        href: "/analytics",
+        label: "Analytics",
     },
     {
         href: "/",

@@ -36,8 +36,7 @@ import { SpinnerMessage, UserMessage } from '@/components/rentals/message';
 import { Chat } from '@/lib/types';
 import { auth } from '@/auth';
 import { db } from '../db';
-import Mybookings from '@/app/bookings/Booked';
-import BookClient from '@/app/book-car/listbook';
+import Mybookings from '@/app/(inside)/bookings/Booked';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || '',

@@ -2,7 +2,7 @@ import AddForm from "../AddForm";
 import { getCar } from "../GetId";
 import { CarSensor } from "../AddForm";
 import { Separator } from "@/components/ui/separator";
-import { CarCard } from "../../CarCard";
+import { CarCard } from "../../../CarCard";
 import { auth } from "@/auth";
 import { Session } from "@/lib/types";
 import { NextResponse } from "next/server";

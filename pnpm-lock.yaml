@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@ai-sdk/openai': ^0.0.14
   '@auth/core': ^0.31.0
   '@calcom/embed-react': ^1.5.0
   '@hookform/resolvers': ^3.3.4
@@ -97,6 +98,7 @@ specifiers:
   zustand: ^4.5.2
 
 dependencies:
+  '@ai-sdk/openai': 0.0.14_zod@3.23.8
   '@auth/core': 0.31.0
   '@calcom/embed-react': 1.5.0_nnrd3gsncyragczmpvfhocinkq
   '@hookform/resolvers': 3.4.2_react-hook-form@7.51.5
@@ -196,6 +198,20 @@ devDependencies:
 
 packages:
 
+  /@ai-sdk/openai/0.0.14_zod@3.23.8:
+    resolution: {integrity: sha512-ZiW2ETP2/K9eBUBZBAAnjLC0sJwViFPsRWpgRTy+KzMOYqkwkRScdQlFreczvfvi8M8ahzx+cavMd64O9pg2AA==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      zod: ^3.0.0
+    peerDependenciesMeta:
+      zod:
+        optional: true
+    dependencies:
+      '@ai-sdk/provider': 0.0.6
+      '@ai-sdk/provider-utils': 0.0.9_zod@3.23.8
+      zod: 3.23.8
+    dev: false
+
   /@ai-sdk/provider-utils/0.0.8_zod@3.23.8:
     resolution: {integrity: sha512-J/ZNvFhORd3gCeK3jFvNrxp1Dnvy6PvPq21RJ+OsIEjsoHeKQaHALCWG0aJunXDuzd+Mck/lCg7LqA0qmIbHIg==}
     engines: {node: '>=18'}
@@ -212,8 +228,31 @@ packages:
       zod: 3.23.8
     dev: false
 
+  /@ai-sdk/provider-utils/0.0.9_zod@3.23.8:
+    resolution: {integrity: sha512-bZFTVp/GIZ3Yz4VejYs0B93bmnwfk+RoSHAQxAe9WamkQFrZLuNgd2ngAFjF6b4naLynWe1ZCk+dLWEtozCciw==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      zod: ^3.0.0
+    peerDependenciesMeta:
+      zod:
+        optional: true
+    dependencies:
+      '@ai-sdk/provider': 0.0.6
+      eventsource-parser: 1.1.2
+      nanoid: 3.3.6
+      secure-json-parse: 2.7.0
+      zod: 3.23.8
+    dev: false
+
   /@ai-sdk/provider/0.0.5:
     resolution: {integrity: sha512-TZDldBZ5clAsNwJ2PSeo/b1uILj9a2lvi0rnOj2RCNZDgaVqFRVIAnKyeHusCRv2lzhPIw03B3fiGI6VoLzOAA==}
+    engines: {node: '>=18'}
+    dependencies:
+      json-schema: 0.4.0
+    dev: false
+
+  /@ai-sdk/provider/0.0.6:
+    resolution: {integrity: sha512-kiPqIsSnUimckaUn87WepxfjPNdy8SXlPP7P6yWuG3e1NmyFHcyuH6EBBZxXLmu0oZtkb+QEeP3UDWGSc+wwKQ==}
     engines: {node: '>=18'}
     dependencies:
       json-schema: 0.4.0

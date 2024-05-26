@@ -5,11 +5,15 @@ import { ResponsiveLine } from "@nivo/line"
 import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Calendar } from "@/components/ui/calendar"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { Select } from "@/components/ui/select"
-
+import { type CoreMessage } from 'ai';
+import { useState } from 'react';
+import { readStreamableValue } from 'ai/rsc';
+import { continueConversation } from "./actions"
 export default function Component() {
+  const [messages, setMessages] = useState<CoreMessage[]>([     { role: 'assistant', content: 'Welcome! How can I assist you with car rental today?' }
+]);
+  const [input, setInput] = useState('');
+  const [data, setData] = useState<any>();
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4 md:px-6 py-8">
@@ -218,78 +222,19 @@ export default function Component() {
             </Table>
           </CardContent>
         </Card>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4 md:px-6 py-8">
         <Card>
           <CardHeader>
             <CardTitle>Booking Calendar</CardTitle>
-            <Button size="sm" variant="outline">
-              View All
-            </Button>
+
           </CardHeader>
           <CardContent>
             <Calendar className="w-full" mode="range" />
           </CardContent>
         </Card>
         <div className="col-span-1 md:col-span-2 lg:col-span-2">
-          <Card>
-            <CardHeader>
-              <CardTitle>New Booking</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form className="grid gap-4">
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="customer-name">Customer Name</Label>
-                    <Input id="customer-name" placeholder="Enter customer name" />
-                  </div>
-                  <div>
-                    <Label htmlFor="customer-phone">Customer Phone</Label>
-                    <Input id="customer-phone" placeholder="Enter customer phone" />
-                  </div>
-                </div>
-                <div className="grid md:grid-cols-3 gap-4">
-                  <div>
-                    <Label htmlFor="vehicle">Vehicle</Label>
-                    <Select>
-                      <option value="">Select a vehicle</option>
-                      <option value="toyota-camry">Toyota Camry</option>
-                      <option value="honda-civic">Honda Civic</option>
-                      <option value="ford-mustang">Ford Mustang</option>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label htmlFor="start-date">Start Date</Label>
-                    <Input id="start-date" type="date" />
-                  </div>
-                  <div>
-                    <Label htmlFor="end-date">End Date</Label>
-                    <Input id="end-date" type="date" />
-                  </div>
-                </div>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="total-price">Total Price</Label>
-                    <Input id="total-price" type="number" />
-                  </div>
-                  <div className="flex items-end">
-                    <Button className="w-full" size="lg" type="submit">
-                      Create Booking
-                    </Button>
-                  </div>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4 md:px-6 py-8">
         <Card>
           <CardHeader>
             <CardTitle>Customer List</CardTitle>
-            <Button size="sm" variant="outline">
-              View All
-            </Button>
           </CardHeader>
           <CardContent>
             <Table>
@@ -330,66 +275,55 @@ export default function Component() {
             </Table>
           </CardContent>
         </Card>
+        </div>
         <Card>
           <CardHeader>
-            <CardTitle>Customer Profile</CardTitle>
-            <Button size="sm" variant="outline">
-              Edit
-            </Button>
+            <CardTitle>Recommendation</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-4">
-              <div className="flex items-center gap-4">
-                <div>
-                  <h3 className="font-semibold">John Doe</h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">johndoe@example.com</p>
-                </div>
-              </div>
-              <div className="grid gap-2">
-                <div className="flex items-center justify-between">
-                  <span>Phone:</span>
-                  <span>555-1234</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span>Rentals:</span>
-                  <span>12</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span>Status:</span>
-                  <Badge variant="outline">Active</Badge>
-                </div>
-              </div>
-              <div>
-                <h4 className="font-semibold mb-2">Rental History</h4>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Vehicle</TableHead>
-                      <TableHead>Rental Period</TableHead>
-                      <TableHead>Total</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    <TableRow>
-                      <TableCell>Toyota Camry</TableCell>
-                      <TableCell>2023-05-01 - 2023-05-08</TableCell>
-                      <TableCell>$350</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>Honda Civic</TableCell>
-                      <TableCell>2023-03-15 - 2023-03-22</TableCell>
-                      <TableCell>$300</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>Ford Mustang</TableCell>
-                      <TableCell>2022-11-01 - 2022-11-07</TableCell>
-                      <TableCell>$450</TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </div>
-            </div>
+          <div className="flex flex-col w-full max-w-md py-24 mx-auto stretch">
+      {data && <pre>{JSON.stringify(data, null, 2)}</pre>}
+      {messages.map((m, i) => (
+        <div key={i} className="whitespace-pre-wrap">
+          {m.role === 'user' ? 'User: ' : 'AI: '}
+          {m.content as string}
+        </div>
+      ))}
+
+      <form
+        action={async () => {
+          const newMessages: CoreMessage[] = [
+            ...messages,
+            { content: input, role: 'user' },
+          ];
+
+          setMessages(newMessages);
+          setInput('');
+
+          const result = await continueConversation(newMessages);
+          setData(result.data);
+
+          for await (const content of readStreamableValue(result.message)) {
+            setMessages([
+              ...newMessages,
+              {
+                role: 'assistant',
+                content: content as string,
+              },
+            ]);
+          }
+        }}
+      >
+        <input
+          className="fixed bottom-0 w-full max-w-md p-2 mb-8 border border-gray-300 rounded shadow-xl"
+          value={input}
+          placeholder="Say something..."
+          onChange={e => setInput(e.target.value)}
+        />
+      </form>
+    </div>
           </CardContent>
+            
         </Card>
       </div>
     </>

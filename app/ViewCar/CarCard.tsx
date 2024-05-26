@@ -15,9 +15,9 @@ import { differenceInCalendarDays } from "date-fns";
 import { Loader2, Wand2 } from "lucide-react";
 import { toast } from "sonner";
 import useBook from "@/lib/hooks/useBook";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import useDisabledDates from "@/actions/nah";
-import { Picker } from "./Picker";
+import { Picker } from "../Picker";
 
 interface Props {
   car: CarSensor | null;
@@ -53,9 +53,8 @@ export const CarCard = ({ car, id, booking = [] }: Props) => {
   }, [date, car?.rental]);
 
   if (!car) {
-    return redirect("/");
+    return <div>Not found</div>;
   }
-  
 
   const handleBooking = () => {
     if (!id) return toast.error("Not Logged In");
@@ -93,7 +92,7 @@ export const CarCard = ({ car, id, booking = [] }: Props) => {
         .then((data) => {
           setclientSecret(data.paymentIntent.client_secret);
           setpaymentIntent(data.paymentIntent.id);
-          router.push("/book-car");
+          return "Added to payment"
         })
         .catch((error) => {
           console.log(error);
@@ -104,13 +103,13 @@ export const CarCard = ({ car, id, booking = [] }: Props) => {
   };
 
   return (
-    <Card className="gap-2">
+    <Card>
       <Image
         alt={car?.id || "Car image"}
         className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full"
         height="310"
         src={car?.image || ""}
-        width="540"
+        width="550"
       />
       <CardHeader>
         <CardTitle>{car?.title}</CardTitle>
@@ -154,7 +153,7 @@ export const CarCard = ({ car, id, booking = [] }: Props) => {
         <Picker date={date} setDate={setDate} disabledDates={dates} />
         <div>Total Price: <span>${totalPrice}</span> for <span>{days} days</span></div>
         <Button disabled={bookings} onClick={handleBooking}>
-          {bookings ? <div><Loader2 className="mr-2 size-4" />Booking</div> : <div ><Wand2 className="mr-2 size-4" />Book now</div>}
+          {bookings ? <div><Loader2 className="mr-2 size-4" />Booking</div> : <div ><Wand2 className="mr-2 size-4" />Reserve</div>}
         </Button>
       </CardFooter>
     </Card>
