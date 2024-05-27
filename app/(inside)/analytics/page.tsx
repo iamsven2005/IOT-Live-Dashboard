@@ -9,34 +9,22 @@ import { type CoreMessage } from 'ai';
 import { useState } from 'react';
 import { readStreamableValue } from 'ai/rsc';
 import { continueConversation } from "./actions"
+import Sensors from "./Sensors"
+import Revenue from "./Revenue"
+import AllUsers from "./User"
+import TotalCars from "./Total"
+import  Bookings from "./bookings"
 export default function Component() {
   const [messages, setMessages] = useState<CoreMessage[]>([     { role: 'assistant', content: 'Welcome! How can I assist you with car rental today?' }
 ]);
   const [input, setInput] = useState('');
   const [data, setData] = useState<any>();
+
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4 md:px-6 py-8">
-        <Card>
-          <CardHeader>
-            <CardTitle>Total Cars</CardTitle>
-            <CarIcon className="w-8 h-8 text-gray-500 dark:text-gray-400" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-4xl font-bold">245</div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Available for rent</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Cars Rented</CardTitle>
-            <CarIcon className="w-8 h-8 text-gray-500 dark:text-gray-400" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-4xl font-bold">157</div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Currently rented out</p>
-          </CardContent>
-        </Card>
+        <TotalCars/>
+
         <Card>
           <CardHeader>
             <CardTitle>Under Maintenance</CardTitle>
@@ -47,31 +35,12 @@ export default function Component() {
             <p className="text-sm text-gray-500 dark:text-gray-400">Being serviced</p>
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Total Revenue</CardTitle>
-            <DollarSignIcon className="w-8 h-8 text-gray-500 dark:text-gray-400" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-4xl font-bold">$125,487</div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Last 30 days</p>
-          </CardContent>
-        </Card>
+
+        <Revenue/>
         <div className="col-span-1 md:col-span-2 lg:col-span-3">
           <Card>
             <CardHeader>
               <CardTitle>Rental Data</CardTitle>
-              <div className="flex items-center gap-2">
-                <Button size="sm" variant="outline">
-                  Daily
-                </Button>
-                <Button size="sm" variant="outline">
-                  Weekly
-                </Button>
-                <Button size="sm" variant="outline">
-                  Monthly
-                </Button>
-              </div>
             </CardHeader>
             <CardContent>
               <LineChart className="aspect-[9/4]" />
@@ -83,9 +52,7 @@ export default function Component() {
         <Card>
           <CardHeader>
             <CardTitle>Vehicle Inventory</CardTitle>
-            <Button size="sm" variant="outline">
-              View All
-            </Button>
+            <Sensors />
           </CardHeader>
           <CardContent>
             <Table>
@@ -130,6 +97,7 @@ export default function Component() {
             </Table>
           </CardContent>
         </Card>
+
         <Card>
           <CardHeader>
             <CardTitle>Maintenance Schedule</CardTitle>
@@ -176,52 +144,9 @@ export default function Component() {
             </Table>
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Current Bookings</CardTitle>
-            <Button size="sm" variant="outline">
-              View All
-            </Button>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Customer</TableHead>
-                  <TableHead>Vehicle</TableHead>
-                  <TableHead>Rental Period</TableHead>
-                  <TableHead>Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow>
-                  <TableCell>John Doe</TableCell>
-                  <TableCell>Toyota Camry</TableCell>
-                  <TableCell>2023-05-01 - 2023-05-08</TableCell>
-                  <TableCell>
-                    <Badge variant="outline">Active</Badge>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Jane Smith</TableCell>
-                  <TableCell>Honda Civic</TableCell>
-                  <TableCell>2023-05-10 - 2023-05-15</TableCell>
-                  <TableCell>
-                    <Badge variant="outline">Active</Badge>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Michael Johnson</TableCell>
-                  <TableCell>Ford Mustang</TableCell>
-                  <TableCell>2023-05-20 - 2023-05-25</TableCell>
-                  <TableCell>
-                    <Badge variant="outline">Active</Badge>
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+
+        <Bookings/>
+
         <Card>
           <CardHeader>
             <CardTitle>Booking Calendar</CardTitle>
@@ -231,51 +156,9 @@ export default function Component() {
             <Calendar className="w-full" mode="range" />
           </CardContent>
         </Card>
-        <div className="col-span-1 md:col-span-2 lg:col-span-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Customer List</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Phone</TableHead>
-                  <TableHead>Rentals</TableHead>
-                  <TableHead>Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow>
-                  <TableCell>John Doe</TableCell>
-                  <TableCell>555-1234</TableCell>
-                  <TableCell>12</TableCell>
-                  <TableCell>
-                    <Badge variant="outline">Active</Badge>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Jane Smith</TableCell>
-                  <TableCell>555-5678</TableCell>
-                  <TableCell>8</TableCell>
-                  <TableCell>
-                    <Badge variant="outline">Active</Badge>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Michael Johnson</TableCell>
-                  <TableCell>555-9012</TableCell>
-                  <TableCell>5</TableCell>
-                  <TableCell>
-                    <Badge variant="secondary">Inactive</Badge>
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-        </div>
+
+        <AllUsers/>
+
         <Card>
           <CardHeader>
             <CardTitle>Recommendation</CardTitle>
@@ -376,7 +259,7 @@ function DollarSignIcon(props: any) {
 
 function LineChart(props: any) {
   return (
-    <div {...props}>
+    <div {...props} className="text-black">
       <ResponsiveLine
         data={[
           {
