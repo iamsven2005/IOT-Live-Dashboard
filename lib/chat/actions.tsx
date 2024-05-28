@@ -33,10 +33,11 @@ import {
 } from '@/lib/utils';
 import { saveChat } from '@/app/actions';
 import { SpinnerMessage, UserMessage } from '@/components/rentals/message';
-import { Chat } from '@/lib/types';
+import { Chat, Session } from '@/lib/types';
 import { auth } from '@/auth';
 import { db } from '../db';
 import Mybookings from '@/app/(inside)/bookings/Booked';
+import { NextResponse } from 'next/server';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || '',
@@ -60,7 +61,7 @@ async function confirmPurchase(symbol: string, price: number, amount: number): P
 
   runAsyncFnWithoutBlocking(async () => {
     await sleep(1000);
-
+  
     purchasing.update(
       <div className="inline-flex items-start gap-1 md:items-center">
         {spinner}
@@ -147,6 +148,12 @@ async function submitUserMessage(content: string): Promise<{ id: string; display
       id: true,
     },
   });
+  const session = (await auth()) as Session;
+  const car = await db.user.findFirst({
+    where:{
+      email: session.user.email
+    }
+  });
   const carArray = JSON.stringify(cars);
   const ui = render({
     model: 'gpt-3.5-turbo',
@@ -157,7 +164,7 @@ async function submitUserMessage(content: string): Promise<{ id: string; display
         role: 'system',
         content: `\
 You are a Car Rental conversation bot and you can help users buy Rentals, step by step or act as customer support for customers in case a car breaks downor any unforseen circumstances.
-You and the user can discuss Rental prices and the user can adjust the amount of time for Car Rentals they want to buy, or place an order, in the UI. When the user makes a search for a rental, take note of his perferences and provide options for suitable for him.
+You and the user can discuss Rental prices and the user can adjust the amount of time for Car Rentals they want to buy, or place an order, in the UI. When the user makes a search for a rental, take note of his perferences and provide options for suitable for him. Try to find more suitable options for the user during the rental process.
 
 Messages inside [] means that it's a UI element or a user event. For example:
 - "[Price of Prius = 100]" means that an interface of the Rental price of Prius is shown to the user.
@@ -168,10 +175,9 @@ If the user just wants the price, call \`show_Rental_price\` to show the price.
 If you want to show trending Rentals, call \`list_Rentals\`.
 If you want to show other trending Rentals, call \`list_Rentals\`.
 If you want to show events or show booking, call \`get_events\`.
-If the user wants to sell Rental, or complete another impossible task, respond that you are a 
-demo and cannot do that.
+If the user wants to sell Rental, or complete another impossible task, respond that you are a demo and cannot do that.
 
-Current cars available are ${carArray}
+Current cars available are ${carArray}, the customer is currently intrested in ${car?.assignedTask} and the customer email is ${car?.email}
 
 Besides that, you can also chat with users and do some calculations if needed.`,
       },
@@ -258,8 +264,9 @@ Besides that, you can also chat with users and do some calculations if needed.`,
           image: z.string().describe('The image of the Rental'),
           name: z.string().describe('The name of the Rental'),
           id: z.string().describe('The id of the Rental'),
+          email: z.string().describe('The email of the current user'),
         }),
-        render: async function* ({ symbol, price, brand, image, name, id }) {
+        render: async function* ({ symbol, price, brand, image, name, id, email }) {
           yield (
             <BotCard>
               <RentalSkeleton />
@@ -276,14 +283,14 @@ Besides that, you can also chat with users and do some calculations if needed.`,
                 id: nanoid(),
                 role: 'function',
                 name: 'showRentalPrice',
-                content: JSON.stringify({ symbol, price, image, name, brand, id }),
+                content: JSON.stringify({ symbol, price, image, name, brand, id, email }),
               },
             ],
           });
 
           return (
             <BotCard>
-              <Rental props={{ symbol, price, image, name, brand, id }} />
+              <Rental props={{ symbol, price, image, name, brand, id, email }} />
             </BotCard>
           );
         },

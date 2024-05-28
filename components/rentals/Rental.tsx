@@ -5,9 +5,10 @@ interface Rental {
   name: string
   image: string
   id: string
+  email: string
 }
 
-export async function Rental({ props: { symbol, price, brand, image, name, id } }: { props: Rental })
+export async function Rental({ props: { symbol, price, brand, image, name, id, email } }: { props: Rental })
 
 {
   return (

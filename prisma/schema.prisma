@@ -58,8 +58,9 @@ model Booking {
   carId           String?
 }
 
-model Training{
+model FaultReport{
   id              String   @id @default(cuid())
   Name            String
+  Image           String
   description     String
 }
