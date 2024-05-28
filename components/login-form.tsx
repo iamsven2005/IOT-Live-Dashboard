@@ -3,7 +3,7 @@
 import { useFormState, useFormStatus } from 'react-dom'
 import { authenticate } from '@/app/(inside)/login/actions'
 import Link from 'next/link'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { IconSpinner } from './ui/icons'
 import { getMessageFromCode } from '@/lib/utils'
@@ -58,15 +58,7 @@ export default function LoginForm() {
               Password
             </label>
             <div className="relative">
-              <input
-                className="peer block w-full rounded-md border bg-zinc-50 px-2 py-[9px] text-sm outline-none placeholder:text-zinc-500 dark:border-zinc-800 dark:bg-zinc-950"
-                id="password"
-                type="password"
-                name="password"
-                placeholder="Enter password"
-                required
-                minLength={6}
-              />
+              <PasswordInput />
             </div>
           </div>
         </div>
@@ -80,6 +72,35 @@ export default function LoginForm() {
         No account yet? <div className="font-semibold underline">Sign up</div>
       </Link>
     </form>
+  )
+}
+
+function PasswordInput() {
+  const [showPassword, setShowPassword] = useState(false)
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword)
+  }
+
+  return (
+    <div className="relative">
+      <input
+        className="peer block w-full rounded-md border bg-zinc-50 px-2 py-[9px] text-sm outline-none placeholder:text-zinc-500 dark:border-zinc-800 dark:bg-zinc-950"
+        id="password"
+        type={showPassword ? "text" : "password"}
+        name="password"
+        placeholder="Enter password"
+        required
+        minLength={6}
+      />
+      <button
+        type="button"
+        onClick={togglePasswordVisibility}
+        className="absolute inset-y-0 right-0 px-3 py-1 text-sm font-semibold text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+      >
+        {showPassword ? "Hide" : "Show"}
+      </button>
+    </div>
   )
 }
 
