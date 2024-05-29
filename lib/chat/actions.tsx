@@ -172,8 +172,8 @@ Messages inside [] means that it's a UI element or a user event. For example:
 
 If the user requests purchasing a Rental, call \`show_Rental_purchase_ui\` to show the purchase UI.
 If the user just wants the price, call \`show_Rental_price\` to show the price.
-If you want to show trending Rentals, call \`list_Rentals\`.
-If you want to show other trending Rentals, call \`list_Rentals\`.
+If you want to show trending Rentals or for list of recommendations, call \`list_Rentals\`.
+If you want to show other trending Rentals or to list out rentals, call \`list_Rentals\`.
 If you want to show events or show booking, call \`get_events\`.
 If the user wants to sell Rental, or complete another impossible task, respond that you are a demo and cannot do that.
 
