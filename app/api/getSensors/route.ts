@@ -5,7 +5,7 @@ export async function GET(req: NextRequest) {
   const consumerGroup = "$Default";
   const client = new EventHubConsumerClient(
     consumerGroup,
-    "Endpoint=sb://ihsuprodsgres005dednamespace.servicebus.windows.net/;SharedAccessKeyName=iothubowner;SharedAccessKey=em3GGuJtNXVXErB3bzavU0NAwy7+yzyg1PUPUbLhxBw=;EntityPath=iothub-ehub-it3681-00-25073661-9ede3c7483"
+    process.env.GG_COM!
   );
 
   const partitionIds = await client.getPartitionIds();
