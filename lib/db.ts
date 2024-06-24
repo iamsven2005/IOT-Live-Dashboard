@@ -1,3 +1,4 @@
+// creates prisma client for backend
 import { PrismaClient } from '@prisma/client'
 
 declare global {

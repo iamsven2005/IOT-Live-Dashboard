@@ -1,5 +1,5 @@
+//main chatbot component
 import 'server-only';
-
 import {
   createAI,
   createStreamableUI,
@@ -9,7 +9,6 @@ import {
   createStreamableValue,
 } from 'ai/rsc';
 import OpenAI from 'openai';
-
 import {
   spinner,
   BotCard,
@@ -18,7 +17,6 @@ import {
   Rental,
   Purchase,
 } from '@/components/rentals';
-
 import { z } from 'zod';
 import { EventsSkeleton } from '@/components/rentals/events-skeleton';
 import { Events } from '@/components/rentals/events';
@@ -37,7 +35,6 @@ import { Chat, Session } from '@/lib/types';
 import { auth } from '@/auth';
 import { db } from '../db';
 import Mybookings from '@/app/(inside)/bookings/Booked';
-import { NextResponse } from 'next/server';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || '',

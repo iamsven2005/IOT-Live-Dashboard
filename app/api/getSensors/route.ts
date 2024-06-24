@@ -1,3 +1,4 @@
+//Sets a cron job to get IOT sensor data
 import { EventHubConsumerClient, earliestEventPosition } from "@azure/event-hubs";
 import { NextRequest, NextResponse } from 'next/server';
 

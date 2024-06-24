@@ -1,3 +1,4 @@
+//gets data from event-hub and return queue to frontend
 const { EventHubConsumerClient, earliestEventPosition } = require("@azure/event-hubs");
 
 export default async function main() {
