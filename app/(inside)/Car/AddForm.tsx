@@ -1,8 +1,8 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Booking, Car, Sensor } from "@prisma/client";
+import { Booking, Brand, Car, Sensor } from "@prisma/client";
 import { z } from "zod";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,15 +15,17 @@ import { Eye, Loader, Plus, Terminal, Trash, XCircle } from "lucide-react";
 import axios from "axios";
 import UseLocation from "@/lib/hooks/uselocation";
 import { ICity, IState } from "country-state-city";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { AddFormSensor } from "../sensors/AddSensorsForm";
 import { Separator } from "@/components/ui/separator";
 import SensorCard from "../sensors/sensorCard";
+import { Editor } from "./editor";
 
 interface Props {
   car: CarSensor | null;
+  brands: Brand[]
 }
 
 export type CarSensor = Car & {
@@ -55,7 +57,7 @@ const formSchema = z.object({
   city: z.string().optional(),
 });
 
-const AddForm = ({ car }: Props) => {
+const AddForm = ({ car, brands }: Props) => {
   const [image, setImage] = useState<string | undefined>(car?.image);
   console.log(car?.description);
   const [imageDelete, setdelete] = useState(false);
@@ -206,7 +208,8 @@ const AddForm = ({ car }: Props) => {
               <FormItem>
                 <FormLabel>Car Description</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="Car Description" {...field} />
+                  <Editor
+                    {...field} />
                 </FormControl>
                 <FormDescription>
                   Whats good?
@@ -224,11 +227,28 @@ const AddForm = ({ car }: Props) => {
               <FormItem>
                 <FormLabel>Car Brand</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="Car Brand" {...field} />
+                  <Controller
+                    control={form.control}
+                    name="brand"
+                    render={({ field }) => (
+                      <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                        <SelectTrigger className="w-[180px]">
+                          <SelectValue placeholder="Select a brand" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            {brands.map((item: Brand) => (
+                              <SelectItem value={item.name} key={item.id}>
+                                {item.name}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                 </FormControl>
-                <FormDescription>
-                  Branding is important!
-                </FormDescription>
+                <FormDescription>Branding is important!</FormDescription>
                 <FormMessage />
               </FormItem>
             )}

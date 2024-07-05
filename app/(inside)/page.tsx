@@ -5,6 +5,7 @@ import { Session } from "@/lib/types";
 import { NextResponse } from "next/server";
 import Search from "@/actions/Search";
 import { redirect } from "next/navigation";
+import SendEmailForm from "@/components/SendEmailForm";
 
 
 interface Props {
@@ -30,6 +31,7 @@ export default async function Home({ searchParams }: Props) {
     <div>
       <Search />
     </div>
+    <SendEmailForm />
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12 m-5">
       {cars.map((car) =>
         <CarCard key={car.id} car={car} id={id} booking={car.bookings} />

@@ -18,6 +18,7 @@ import useBook from "@/lib/hooks/useBook";
 import { useRouter } from "next/navigation";
 import useDisabledDates from "@/actions/nah";
 import { Picker } from "../Picker";
+import { Preview } from "../(inside)/Car/preview";
 
 interface Props {
   car: CarSensor | null;
@@ -113,7 +114,9 @@ export const CarCard = ({ car, id, booking = [] }: Props) => {
       />
       <CardHeader>
         <CardTitle>{car?.title}</CardTitle>
-        <CardDescription>{car?.description}</CardDescription>
+        <CardDescription>
+        <Preview value={car?.description}/>
+          </CardDescription>
       </CardHeader>
       <CardFooter className="flex flex-col items-start">
         <Separator />

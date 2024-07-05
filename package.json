@@ -82,6 +82,7 @@
     "react-hook-form": "^7.51.4",
     "react-intersection-observer": "^9.5.3",
     "react-markdown": "^8.0.7",
+    "react-quill": "^2.0.0",
     "react-syntax-highlighter": "^15.5.0",
     "react-textarea-autosize": "^8.5.3",
     "react-use": "^17.5.0",

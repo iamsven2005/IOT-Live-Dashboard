@@ -30,6 +30,9 @@ const FormSchema = z.object({
   description: z.string().min(3, {
     message: "Less than 3 characters",
   }),
+  installation: z.string().min(3, {
+    message: "Less than 3 characters",
+  }),
   threshold: z.coerce.number().min(1, { message: "Sensor value must be added" }),
   image: z.string().min(3, {
     message: "Image must be added",
@@ -51,12 +54,14 @@ export const AddFormSensor = ({ car, sensors, handledialogOpen }: Props) => {
           description: sensors.description || "",
           image: sensors.image || "",
           threshold: Number(sensors.threshold) || 0,
+          installation: sensors.installation || "",
         }
       : {
           title: "",
           description: "",
           image: "",
           threshold: 0,
+          installation: "",
         },
   });
 
@@ -142,6 +147,20 @@ export const AddFormSensor = ({ car, sensors, handledialogOpen }: Props) => {
                   <Input placeholder="Bright and shiny" {...field} />
                 </FormControl>
                 <FormDescription>Provide the description of the sensor:</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="installation"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Sensor Installation</FormLabel>
+                <FormControl>
+                  <Input placeholder="How to install and use this sensor" {...field} />
+                </FormControl>
+                <FormDescription>Provide the installation of the sensor:</FormDescription>
                 <FormMessage />
               </FormItem>
             )}

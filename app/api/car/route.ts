@@ -17,7 +17,7 @@ export async function POST(req: Request){
         })
         return NextResponse.json(car)
     }catch(error){
-        console.log("/api/car",error)
+        console.log("/api/brands",error)
         return new NextResponse("Internal server Error", {status: 500})
     }
 }

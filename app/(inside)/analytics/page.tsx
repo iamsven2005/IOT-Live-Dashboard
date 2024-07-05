@@ -15,6 +15,7 @@ import AllUsers from "./User"
 import TotalCars from "./Total"
 import  Bookings from "./bookings"
 import LineChartComponent from "./Chat"
+import Brands from "./Brands"
 export default function Component() {
   const [messages, setMessages] = useState<CoreMessage[]>([     { role: 'assistant', content: 'Welcome! How can I assist you with car rental today?' }
 ]);
@@ -148,15 +149,7 @@ export default function Component() {
 
         <Bookings/>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Booking Calendar</CardTitle>
-
-          </CardHeader>
-          <CardContent>
-            <Calendar className="w-full" mode="range" />
-          </CardContent>
-        </Card>
+        <Brands/>
 
         <AllUsers/>
 

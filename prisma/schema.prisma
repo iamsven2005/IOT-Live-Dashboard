@@ -42,6 +42,7 @@ model Sensor {
   image       String
   Car         Car?    @relation(fields: [carId], references: [id], onDelete: Cascade)
   carId       String?
+  installation String?
 }
 
 model Booking {
@@ -63,4 +64,20 @@ model FaultReport{
   Name            String
   Image           String
   description     String
+}
+
+model sensordata{
+  id              String   @id @default(cuid())
+  carid           String
+  temperature     Int
+  humidity        Int
+  fuellevel       Int
+  pressure        Int
+  acceleration    Int
+  gyroscope       Int
+  lightintensity  Int
+}
+model Brand{
+  id              String   @id @default(cuid())
+  name            String
 }

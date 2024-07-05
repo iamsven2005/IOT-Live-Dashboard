@@ -14,7 +14,7 @@ const Search =() =>{
     const router = useRouter()
     const title = searchParams.get("title")
     const [value, setValue]= useState(title || "")
-
+    
     useEffect(()=>{
         const query = {
             title: value

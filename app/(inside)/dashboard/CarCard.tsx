@@ -6,6 +6,7 @@ import { Car, Sensor } from "@prisma/client";
 import { getStateByCodeAndCountry } from "country-state-city/lib/state";
 import Image from "next/image";
 import Link from "next/link";
+import { Preview } from "../Car/preview";
 
 interface Props {
     car: CarSensor | null;
@@ -32,7 +33,8 @@ export const CarCard = ({ car }: Props) => {
             />
             <CardHeader>
                 <CardTitle>{car?.title}</CardTitle>
-                <CardDescription>{car?.description}</CardDescription>
+                <CardDescription>                <Preview value={car?.description}/>
+                </CardDescription>
             </CardHeader>
             <CardFooter className="flex flex-col items-start">
                 <div>
