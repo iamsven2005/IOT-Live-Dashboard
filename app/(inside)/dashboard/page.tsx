@@ -7,6 +7,7 @@ interface Props {
     country: string;
     state: string;
     city: string;
+    brand: string
   };
 }
 

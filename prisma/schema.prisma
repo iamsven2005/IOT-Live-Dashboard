@@ -81,3 +81,24 @@ model Brand{
   id              String   @id @default(cuid())
   name            String
 }
+model Deals{
+  id              Int   @id @default(autoincrement())
+  name            String
+  price           String
+  description     String @default("No Details Added")
+}
+model Faults {
+  id            String         @id @default(cuid())
+  file          String
+  addressed     Boolean
+  faultDetails  FaultDetails[] @relation("FaultDetailsRelation")
+}
+
+model FaultDetails {
+  id          String  @id @default(cuid())
+  description String
+  faultId     String
+  fault       Faults  @relation("FaultDetailsRelation", fields: [faultId], references: [id])
+
+  @@index([faultId])
+}

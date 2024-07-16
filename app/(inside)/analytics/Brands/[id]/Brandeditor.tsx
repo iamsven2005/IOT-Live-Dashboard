@@ -1,4 +1,7 @@
 "use client";
+import { Button } from "@/components/ui/button";
+import { Card, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -58,21 +61,21 @@ const BrandEditor: React.FC<BrandEditorProps> = ({ brand }) => {
   };
 
   return (
-    <div>
-      <h1>Edit Brand</h1>
-      <input
+    <Card className="p-5 m-5 gap-5">
+      <CardTitle className="text-3xl font-bold">Edit Brand</CardTitle>
+      <Input
         type="text"
         value={name}
         onChange={(e) => setName(e.target.value)}
         disabled={isSubmitting}
       />
-      <button onClick={handleUpdate} disabled={isSubmitting}>
+      <Button onClick={handleUpdate} disabled={isSubmitting}>
         {isSubmitting ? "Updating..." : "Update"}
-      </button>
-      <button onClick={handleDelete} disabled={isSubmitting}>
+      </Button>
+      <Button onClick={handleDelete} disabled={isSubmitting}>
         {isSubmitting ? "Deleting..." : "Delete"}
-      </button>
-    </div>
+      </Button>
+    </Card>
   );
 };
 

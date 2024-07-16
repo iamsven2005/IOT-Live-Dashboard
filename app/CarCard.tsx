@@ -159,6 +159,9 @@ export const CarCard = ({ car, id, booking = [] }: Props) => {
           {bookings ? <div><Loader2 className="mr-2 size-4" />Booking</div> : <div ><Wand2 className="mr-2 size-4" />Book now</div>}
         </Button>
       </CardFooter>
+      <div className="m-5 p-5 flex-wrap gap-5">
+
+      </div>
     </Card>
   );
 };

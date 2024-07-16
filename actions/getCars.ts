@@ -3,22 +3,20 @@ import { toast } from "sonner"
 import {auth} from "@/auth"
 export const getCars = async(searchParams: {
     title: string
-    country: string
-    state: string
-    city: string
+    brand: string
 }
 ) =>{
     try{
-        const {title, country, state, city} = searchParams
+        const {title, brand} = searchParams
         const cars = await db.car.findMany({
             where:{
                 title:{
-                    
                     contains: title
                 },
-                country,
-                state,
-                city,
+                brand:{
+                    contains: brand
+                }
+                
             },
         include: {sensors: true,bookings: true}
     })

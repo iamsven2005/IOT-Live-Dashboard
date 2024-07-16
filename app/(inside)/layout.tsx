@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils'
 import { Providers } from '@/components/providers'
 import { Header as Head1} from '@/components/header'
 import { Toaster } from '@/components/ui/sonner'
+import { Analytics } from "@vercel/analytics/react"
 
 export const metadata = {
   metadataBase: process.env.VERCEL_URL
@@ -58,6 +59,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
               </main>
           </div>
         </Providers>
+        <Analytics/>
       </body>
     </html>
   )
