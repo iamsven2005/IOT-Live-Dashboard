@@ -30,7 +30,7 @@ export default function Component() {
         <Card>
           <CardHeader>
             <CardTitle>Under Maintenance</CardTitle>
-            <WrenchIcon className="w-8 h-8 text-gray-500 dark:text-gray-400" />
+            <WrenchIcon className="size-8 text-gray-500 dark:text-gray-400" />
           </CardHeader>
           <CardContent>
             <div className="text-4xl font-bold">28</div>

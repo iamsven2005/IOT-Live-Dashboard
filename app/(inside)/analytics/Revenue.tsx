@@ -40,7 +40,7 @@ export default function Revenue() {
         <Card>
           <CardHeader>
             <CardTitle>Cars Rented</CardTitle>
-            <CarIcon className="w-8 h-8 text-gray-500 dark:text-gray-400" />
+            <CarIcon className="size-8 text-gray-500 dark:text-gray-400" />
           </CardHeader>
           <CardContent>
             <div className="text-4xl font-bold">{data.bookingCount}</div>
@@ -50,7 +50,7 @@ export default function Revenue() {
         <Card>
             <CardHeader>
               <CardTitle>Total Revenue</CardTitle>
-              <DollarSignIcon className="w-8 h-8 text-gray-500 dark:text-gray-400" />
+              <DollarSignIcon className="size-8 text-gray-500 dark:text-gray-400" />
             </CardHeader>
             <CardContent>
             {data.totalRevenue !== null ? (

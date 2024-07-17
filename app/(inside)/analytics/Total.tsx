@@ -35,7 +35,7 @@ const TotalCars = () => {
     <Card>
       <CardHeader>
         <CardTitle>Total Cars</CardTitle>
-        <CarIcon className="w-8 h-8 text-gray-500 dark:text-gray-400" />
+        <CarIcon className="size-8 text-gray-500 dark:text-gray-400" />
       </CardHeader>
       <CardContent>
         <div className="text-4xl font-bold">{count}</div>
