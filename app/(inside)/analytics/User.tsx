@@ -1,7 +1,10 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { toast } from 'sonner';
 
 export default function Revenue() {
   const [data, setData] = useState<{ users: any[] }>({ users: [] });
@@ -27,6 +30,36 @@ export default function Revenue() {
     fetchRevenue();
   }, []);
 
+  const banUser = async (userId: string) => {
+    try {
+      await axios.post('/api/banUser', { userId });
+      setData((prevData) => ({
+        users: prevData.users.map((user) =>
+          user.id === userId ? { ...user, role: 'ban' } : user
+        ),
+      }));
+      toast.success('User banned successfully');
+    } catch (error) {
+      console.error('Failed to ban user:', error);
+      toast.error('Failed to ban user');
+    }
+  };
+
+  const unbanUser = async (userId: string) => {
+    try {
+      await axios.post('/api/unbanUser', { userId });
+      setData((prevData) => ({
+        users: prevData.users.map((user) =>
+          user.id === userId ? { ...user, role: 'user' } : user
+        ),
+      }));
+      toast.success('User unbanned successfully');
+    } catch (error) {
+      console.error('Failed to unban user:', error);
+      toast.error('Failed to unban user');
+    }
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -48,6 +81,7 @@ export default function Revenue() {
               <TableHead>Notes</TableHead>
               <TableHead>Id</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -60,6 +94,17 @@ export default function Revenue() {
                   <Badge variant={user.role === "user" ? "outline" : "secondary"}>
                     {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
                   </Badge>
+                </TableCell>
+                <TableCell>
+                  {user.role === "ban" ? (
+                    <Button variant="secondary" onClick={() => unbanUser(user.id)}>
+                      Unban
+                    </Button>
+                  ) : (
+                    <Button variant="destructive" onClick={() => banUser(user.id)}>
+                      Ban
+                    </Button>
+                  )}
                 </TableCell>
               </TableRow>
             ))}

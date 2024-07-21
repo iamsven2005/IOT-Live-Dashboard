@@ -17,6 +17,7 @@ import  Bookings from "./bookings"
 import LineChartComponent from "./Chat"
 import Brands from "./Brands"
 import Deals from "./Deals"
+import Link from "next/link"
 export default function Component() {
   const [messages, setMessages] = useState<CoreMessage[]>([     { role: 'assistant', content: 'Welcome! How can I assist you with car rental today?' }
 ]);
@@ -34,8 +35,11 @@ export default function Component() {
             <WrenchIcon className="size-8 text-gray-500 dark:text-gray-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-4xl font-bold">28</div>
+            <div className="text-4xl font-bold">5</div>
             <p className="text-sm text-gray-500 dark:text-gray-400">Being serviced</p>
+            <Link href="/faults">
+            View More
+            </Link>
           </CardContent>
         </Card>
 
