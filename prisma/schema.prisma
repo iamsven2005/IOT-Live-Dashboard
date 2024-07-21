@@ -90,7 +90,8 @@ model Deals{
 model Faults {
   id            String         @id @default(cuid())
   file          String
-  addressed     Boolean
+  status        Status
+  title         String
   faultDetails  FaultDetails[] @relation("FaultDetailsRelation")
 }
 
@@ -98,7 +99,13 @@ model FaultDetails {
   id          String  @id @default(cuid())
   description String
   faultId     String
-  fault       Faults  @relation("FaultDetailsRelation", fields: [faultId], references: [id])
+  fault       Faults  @relation("FaultDetailsRelation", fields: [faultId], references: [id], onDelete: Cascade)
 
   @@index([faultId])
+}
+
+enum Status {
+  TODO
+  IN_PROGRESS
+  DONE
 }

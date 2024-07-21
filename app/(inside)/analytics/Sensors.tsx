@@ -54,8 +54,6 @@ export default function Sensors() {
             <p>Humidity: {sensor.data.humidity}</p>
             <p>Fuel Level: {sensor.data.fuelLevel}</p>
             <p>Pressure: {sensor.data.pressure}</p>
-            <p>Accelerometer: x: {sensor.data.accelerometer.x}, y: {sensor.data.accelerometer.y}, z: {sensor.data.accelerometer.z}</p>
-            <p>Gyroscope: x: {sensor.data.gyroscope.x}, y: {sensor.data.gyroscope.y}, z: {sensor.data.gyroscope.z}</p>
             <p>Light Intensity: {sensor.data.lightIntensity}</p>
           </CarouselItem>
         ))}

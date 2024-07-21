@@ -1,5 +1,5 @@
 "use client"
-import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/card"
+import { CardTitle, CardHeader, CardContent, Card, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ResponsiveLine } from "@nivo/line"
 import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table"
@@ -16,6 +16,7 @@ import TotalCars from "./Total"
 import  Bookings from "./bookings"
 import LineChartComponent from "./Chat"
 import Brands from "./Brands"
+import Deals from "./Deals"
 export default function Component() {
   const [messages, setMessages] = useState<CoreMessage[]>([     { role: 'assistant', content: 'Welcome! How can I assist you with car rental today?' }
 ]);
@@ -100,52 +101,7 @@ export default function Component() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Maintenance Schedule</CardTitle>
-            <Button size="sm" variant="outline">
-              View All
-            </Button>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Vehicle</TableHead>
-                  <TableHead>Next Service</TableHead>
-                  <TableHead>Last Service</TableHead>
-                  <TableHead>Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow>
-                  <TableCell>Toyota Camry</TableCell>
-                  <TableCell>2023-06-15</TableCell>
-                  <TableCell>2023-03-01</TableCell>
-                  <TableCell>
-                    <Badge variant="destructive">Due Soon</Badge>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Honda Civic</TableCell>
-                  <TableCell>2023-08-01</TableCell>
-                  <TableCell>2023-04-20</TableCell>
-                  <TableCell>
-                    <Badge variant="outline">Up to Date</Badge>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Ford Mustang</TableCell>
-                  <TableCell>2023-05-01</TableCell>
-                  <TableCell>2023-01-15</TableCell>
-                  <TableCell>
-                    <Badge variant="secondary">Overdue</Badge>
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+        <Deals/>
 
         <Bookings/>
 
