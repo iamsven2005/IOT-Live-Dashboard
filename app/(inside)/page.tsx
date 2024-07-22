@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import Search from "@/actions/Search";
 import SendEmailForm from "@/components/SendEmailForm";
 import { db } from "@/lib/db";
+import { toast } from "sonner";
 
 interface Props {
   searchParams: {
@@ -26,6 +27,21 @@ export default async function Home({ searchParams }: Props) {
   if (!session) {
     return redirect("/login");
   }
+  
+  const user = await db.user.findFirst({
+    where:{
+      email: session.user.email
+    }
+  });
+  
+  if (!user){
+    return redirect("/login");
+  }
+  
+  if(user.role === "ban"){
+    return redirect("/login");
+  }
+
   const brands = await db.brand.findMany();
 
   const id = session.user.id;

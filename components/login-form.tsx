@@ -17,7 +17,11 @@ export default function LoginForm() {
     if (result) {
       if (result.type === 'error') {
         toast.error(getMessageFromCode(result.resultCode))
-      } else {
+      } 
+      else if( result.type === 'ban'){
+        toast.error("You have been banned, please contact iamsven2005+dashboard@gmail.com")
+      }
+      else {
         toast.success(getMessageFromCode(result.resultCode))
         router.refresh()
       }

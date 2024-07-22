@@ -6,6 +6,7 @@ import { AuthError } from 'next-auth'
 import { z } from 'zod'
 import { kv } from '@vercel/kv'
 import { ResultCode } from '@/lib/utils'
+import { db } from '@/lib/db'
 
 export async function getUser(email: string) {
   const user = await kv.hgetall<User>(`user:${email}`)
@@ -25,6 +26,13 @@ export async function authenticate(
     const email = formData.get('email')
     const password = formData.get('password')
 
+    if (typeof email !== 'string' || typeof password !== 'string') {
+      return {
+        type: 'error',
+        resultCode: ResultCode.InvalidCredentials
+      }
+    }
+
     const parsedCredentials = z
       .object({
         email: z.string().email(),
@@ -42,9 +50,22 @@ export async function authenticate(
         redirect: false
       })
 
-      return {
-        type: 'success',
-        resultCode: ResultCode.UserLoggedIn
+      const user = await db.user.findFirst({
+        where: {
+          email
+        }
+      })
+
+      if (user?.role === "ban") {
+        return {
+          type: 'error',
+          resultCode: ResultCode.Ban
+        }
+      } else {
+        return {
+          type: 'success',
+          resultCode: ResultCode.UserLoggedIn
+        }
       }
     } else {
       return {

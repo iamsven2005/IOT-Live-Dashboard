@@ -30,7 +30,21 @@ export default function Revenue() {
     fetchRevenue();
   }, []);
 
-  const banUser = async (userId: string) => {
+  const sendEmail = async (to: string, subject: string, message: string) => {
+    try {
+      await fetch('/api/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ to, subject, message }),
+      });
+    } catch (error) {
+      console.error('Failed to send email:', error);
+    }
+  };
+
+  const banUser = async (userId: string, email: string) => {
     try {
       await axios.post('/api/banUser', { userId });
       setData((prevData) => ({
@@ -39,13 +53,14 @@ export default function Revenue() {
         ),
       }));
       toast.success('User banned successfully');
+      await sendEmail(email, 'Account Banned', 'Your account has been banned.');
     } catch (error) {
       console.error('Failed to ban user:', error);
       toast.error('Failed to ban user');
     }
   };
 
-  const unbanUser = async (userId: string) => {
+  const unbanUser = async (userId: string, email: string) => {
     try {
       await axios.post('/api/unbanUser', { userId });
       setData((prevData) => ({
@@ -54,6 +69,7 @@ export default function Revenue() {
         ),
       }));
       toast.success('User unbanned successfully');
+      await sendEmail(email, 'Account Unbanned', 'Your account has been unbanned.');
     } catch (error) {
       console.error('Failed to unban user:', error);
       toast.error('Failed to unban user');
@@ -97,11 +113,11 @@ export default function Revenue() {
                 </TableCell>
                 <TableCell>
                   {user.role === "ban" ? (
-                    <Button variant="secondary" onClick={() => unbanUser(user.id)}>
+                    <Button variant="secondary" onClick={() => unbanUser(user.id, user.email)}>
                       Unban
                     </Button>
                   ) : (
-                    <Button variant="destructive" onClick={() => banUser(user.id)}>
+                    <Button variant="destructive" onClick={() => banUser(user.id, user.email)}>
                       Ban
                     </Button>
                   )}

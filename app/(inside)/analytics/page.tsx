@@ -56,54 +56,9 @@ export default function Component() {
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4 md:px-6 py-8">
-        <Card>
-          <CardHeader>
-            <CardTitle>Vehicle Inventory</CardTitle>
+        
             <Sensors />
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Make</TableHead>
-                  <TableHead>Model</TableHead>
-                  <TableHead>Year</TableHead>
-                  <TableHead>Reg. No.</TableHead>
-                  <TableHead>Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow>
-                  <TableCell>Toyota</TableCell>
-                  <TableCell>Camry</TableCell>
-                  <TableCell>2020</TableCell>
-                  <TableCell>ABC123</TableCell>
-                  <TableCell>
-                    <Badge variant="outline">Available</Badge>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Honda</TableCell>
-                  <TableCell>Civic</TableCell>
-                  <TableCell>2018</TableCell>
-                  <TableCell>DEF456</TableCell>
-                  <TableCell>
-                    <Badge variant="secondary">Rented</Badge>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Ford</TableCell>
-                  <TableCell>Mustang</TableCell>
-                  <TableCell>2021</TableCell>
-                  <TableCell>GHI789</TableCell>
-                  <TableCell>
-                    <Badge variant="destructive">Maintenance</Badge>
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+         
 
         <Deals/>
 
