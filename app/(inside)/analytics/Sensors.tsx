@@ -14,6 +14,7 @@ interface SensorData {
   accelerometer: string;
   gyroscope: string;
   lightintensity: number;
+  timestamps: Date
 }
 
 export default function SensorDataTable() {
@@ -57,12 +58,14 @@ export default function SensorDataTable() {
     <Card>
       <CardHeader>
         <CardTitle>Sensor Data</CardTitle>
-        <CardDescription>
-          Sensor: {process.env.GG_COM}
+        <CardDescription className='w-96 break-all'>
+
+          Sensor: Endpoint=sb://ihsuprodsgres005dednamespace.servicebus.windows.net/;SharedAccessKeyName=iothubowner;SharedAccessKey=em3GGuJtNXVXErB3bzavU0NAwy7+yzyg1PUPUbLhxBw=;EntityPath=iothub-ehub-it3681-00-25073661-9ede3c7483
         </CardDescription>
+
       </CardHeader>
       <CardContent>
-        <ScrollArea className="m-5 whitespace-nowrap rounded-md border">
+        <ScrollArea className="m-5 whitespace-nowrap rounded-md border h-96">
           <Table>
             <TableHeader>
               <TableRow>
@@ -75,6 +78,7 @@ export default function SensorDataTable() {
                 <TableHead>Accelerometer</TableHead>
                 <TableHead>Gyroscope</TableHead>
                 <TableHead>Light Intensity</TableHead>
+                <TableHead>Time</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -93,6 +97,7 @@ export default function SensorDataTable() {
                     {JSON.parse(item.gyroscope).x.toFixed(2)}, {JSON.parse(item.gyroscope).y.toFixed(2)}, {JSON.parse(item.gyroscope).z.toFixed(2)}
                   </TableCell>
                   <TableCell>{item.lightintensity}</TableCell>
+                  <TableCell>{item.timestamps.toString()}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
