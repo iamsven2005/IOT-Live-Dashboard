@@ -1,13 +1,14 @@
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { Session } from "@/lib/types";
+import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
 
 export const getBooking = async () => {
   const session = (await auth()) as Session;
   
   if (!session) {
-    return new NextResponse("unauthorized", { status: 401 });
+    return redirect("/");
   }
 
   try {

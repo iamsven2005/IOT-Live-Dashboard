@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { Session } from "@/lib/types";
+import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
 
 export const GET = async () => {
@@ -23,7 +24,8 @@ export const POST = async (req: Request) => {
         const body = await req.json()
         const session = (await auth()) as Session
         if(!session){
-            return new NextResponse("unauthorized", {status: 401})
+            return redirect("/");
+
         }
         const users = await db.brand.create({
         data:{

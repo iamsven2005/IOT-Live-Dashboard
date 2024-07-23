@@ -1,6 +1,7 @@
 import { auth } from "@/auth"
 import { db } from "@/lib/db"
 import { Session } from "@/lib/types"
+import { redirect } from "next/navigation"
 import { NextResponse } from "next/server"
 
 export async function POST(req: Request){
@@ -8,7 +9,8 @@ export async function POST(req: Request){
         const body = await req.json()
         const session = (await auth()) as Session
         if(!session){
-            return new NextResponse("unauthorized", {status: 401})
+            return redirect("/");
+
         }
         const car = await db.sensor.create({
             data:{

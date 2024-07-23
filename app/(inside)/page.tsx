@@ -4,9 +4,7 @@ import { auth } from "@/auth";
 import { Session } from "@/lib/types";
 import { redirect } from "next/navigation";
 import Search from "@/actions/Search";
-import SendEmailForm from "@/components/SendEmailForm";
 import { db } from "@/lib/db";
-import { toast } from "sonner";
 
 interface Props {
   searchParams: {
@@ -50,7 +48,6 @@ export default async function Home({ searchParams }: Props) {
       <div>
         <Search brands={brands}/>
       </div>
-      <SendEmailForm />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12 m-5">
         {cars.map((car) => (
           <CarCard key={car.id} car={car} id={id} booking={car.bookings} />

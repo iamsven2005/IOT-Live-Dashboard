@@ -9,6 +9,7 @@ import { Session } from '@/lib/types'
 import Header from '@/app/(inside)/header'
 import Link from 'next/link'
 import { Button } from './ui/button'
+import { redirect } from 'next/navigation'
 
 interface SidebarListProps {
   userId?: string
@@ -24,7 +25,7 @@ export async function SidebarList({ userId }: SidebarListProps) {
   const session = (await auth()) as Session;
   
   if (!session) {
-    return new NextResponse("unauthorized", { status: 401 });
+    return redirect("/");
   }
   return (
     <div className="flex flex-1 flex-col overflow-hidden">

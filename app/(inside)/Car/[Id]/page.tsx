@@ -7,6 +7,7 @@ import { auth } from "@/auth";
 import { Session } from "@/lib/types";
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { redirect } from "next/navigation";
 
 interface Props {
   params: {
@@ -19,7 +20,7 @@ const Car = async ({ params }: Props) => {
   const session = (await auth()) as Session;
   
   if (!session) {
-    return new NextResponse("unauthorized", { status: 401 });
+    return redirect("/");
   }
   const brands = await db.brand.findMany()
   return (<div className="flex flex-col container">{session.user.email == process.env.ADMIN ?( <AddForm car={car} brands={brands}/>) : (<CarCard id={params.Id} car={car} booking={car?.bookings}/>)}

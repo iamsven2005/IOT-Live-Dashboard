@@ -133,7 +133,7 @@ export const CarCard = ({ car, id, booking = [] }: Props) => {
             </AccordionContent>
           </AccordionItem>
           <Separator />
-          <AccordionItem value="item-1">
+          <AccordionItem value="item-2">
             <AccordionTrigger>Sensors</AccordionTrigger>
             <AccordionContent>
               <Carousel className="m-5">

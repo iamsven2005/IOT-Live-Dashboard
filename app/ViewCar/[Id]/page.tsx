@@ -5,6 +5,7 @@ import { auth } from "@/auth";
 import { Session } from "@/lib/types";
 import { NextResponse } from "next/server";
 import { CarCard } from "../CarCard";
+import { redirect } from "next/navigation";
 
 interface Props {
   params: {
@@ -17,7 +18,8 @@ const Car = async ({ params }: Props) => {
   const session = (await auth()) as Session;
   
   if (!session) {
-    return new NextResponse("unauthorized", { status: 401 });
+    return redirect("/");
+
   }
   return (<CarCard id={params.Id} car={car} booking={car?.bookings}/>);
 };
