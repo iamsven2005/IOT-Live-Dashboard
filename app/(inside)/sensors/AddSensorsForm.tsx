@@ -80,7 +80,7 @@ export const AddFormSensor = ({ car, sensors, handledialogOpen }: Props) => {
         .post("/api/sensors", { ...values, carId: car.id })
         .then((res) => {
           toast.success("Successfully Created");
-          router.push(`/sensors/${res.data.id}`);
+          router.push(`/dashboard`);
           setIsloading(false);
         })
         .catch((error) => {

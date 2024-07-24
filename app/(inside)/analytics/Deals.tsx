@@ -25,7 +25,14 @@ const DealsList: React.FC = () => {
   useEffect(() => {
     const fetchDeals = async () => {
       try {
-        const response = await fetch('/api/deals');
+        const response = await fetch('/api/deals', {
+          headers: {
+            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0',
+            'Surrogate-Control': 'no-store'
+          }
+        });
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -37,6 +44,7 @@ const DealsList: React.FC = () => {
         setLoading(false);
       }
     };
+    
 
     fetchDeals();
   }, []);
