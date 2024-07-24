@@ -1,7 +1,9 @@
+"use client";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'sonner';
@@ -9,9 +11,10 @@ import { toast } from 'sonner';
 export default function Revenue() {
   const [data, setData] = useState<{ users: any[] }>({ users: [] });
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    const fetchRevenue = async () => {
+    const fetchUsers = async () => {
       try {
         const response = await fetch('/api/users');
         if (!response.ok) {
@@ -21,14 +24,18 @@ export default function Revenue() {
         const result = await response.json();
         setData(result);
       } catch (error) {
-        console.error('Failed to fetch revenue data:', error);
+        console.error('Failed to fetch brand data:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchRevenue();
+    fetchUsers();
   }, []);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
 
   const sendEmail = async (to: string, subject: string, message: string) => {
     try {
@@ -84,12 +91,23 @@ export default function Revenue() {
     return <div>Failed to load data.</div>;
   }
 
+  const filteredUsers = data.users.filter(user =>
+    user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>Customer List</CardTitle>
       </CardHeader>
       <CardContent>
+        <Input
+          type="text"
+          placeholder="Search by email"
+          value={searchTerm}
+          onChange={handleSearchChange}
+          className="mb-4"
+        />
         <Table>
           <TableHeader>
             <TableRow>
@@ -101,7 +119,7 @@ export default function Revenue() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data.users.map((user) => (
+            {filteredUsers.map((user) => (
               <TableRow key={user.id}>
                 <TableCell>{user.email}</TableCell>
                 <TableCell>{user.assignedTask}</TableCell>

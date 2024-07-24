@@ -1,4 +1,4 @@
-import { Badge } from "@/components/ui/badge";
+"use client"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Brand } from "@prisma/client";
 import Link from "next/link";
@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 export default function Revenue() {
   const [data, setData] = useState<{ users: Brand[] }>({ users: [] });
@@ -53,6 +54,7 @@ const router = useRouter()
       setData((prevData) => ({ users: [...prevData.users, newBrand] }));
       reset();
       toast.success("Brand created successfully");
+      revalidatePath("/analytics")
       router.refresh()
     } catch (error) {
       console.error('Failed to create brand:', error);

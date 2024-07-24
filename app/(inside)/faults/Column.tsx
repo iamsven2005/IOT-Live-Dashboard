@@ -22,6 +22,7 @@ const Column = ({ title, tasks, droppableId, setTasks }: Props) => {
   const [editTaskFile, setEditTaskFile] = useState<string>("");
   const [newDetail, setNewDetail] = useState<string>("");
   const [taskDetails, setTaskDetails] = useState<{ [key: string]: FaultDetails[] }>({});
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -93,7 +94,10 @@ const Column = ({ title, tasks, droppableId, setTasks }: Props) => {
       toast.error("Error editing task");
     }
   };
-  
+
+  const filteredTasks = tasks.filter(task =>
+    task.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <Card>
@@ -101,10 +105,17 @@ const Column = ({ title, tasks, droppableId, setTasks }: Props) => {
         <CardTitle>{title}</CardTitle>
       </CardHeader>
       <CardContent>
+        <Input
+          type="text"
+          placeholder="Search faults..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="mb-4"
+        />
         <Droppable droppableId={droppableId}>
           {(provided) => (
             <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-2">
-              {tasks.map((task, index) => (
+              {filteredTasks.map((task, index) => (
                 <Draggable key={task.id} index={index} draggableId={task.id}>
                   {(provided) => (
                     <div
@@ -117,7 +128,7 @@ const Column = ({ title, tasks, droppableId, setTasks }: Props) => {
                     >
                       <div className="flex flex-col justify-between items-center">
                         <p>{task.title}</p>
-                        <img src={task.file}/>
+                        <img src={task.file} alt="task file" />
                         {hoverIndex === index && (
                           <div className="flex gap-5">
                             <div className="text-xs cursor-pointer" onClick={() => { setEditTaskId(task.id); setEditTaskTitle(task.title); setEditTaskFile(task.file); }}>

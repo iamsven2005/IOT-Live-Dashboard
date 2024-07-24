@@ -1,9 +1,10 @@
 "use client";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
-import { toast } from "sonner";
 
 interface BrandEditorProps {
   brand: { id: string; name: string };
@@ -12,6 +13,7 @@ interface BrandEditorProps {
 const BrandEditor: React.FC<BrandEditorProps> = ({ brand }) => {
   const [name, setName] = useState(brand.name);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
 
   const handleUpdate = async () => {
     setIsSubmitting(true);
@@ -25,6 +27,7 @@ const BrandEditor: React.FC<BrandEditorProps> = ({ brand }) => {
       });
       if (response.ok) {
         toast.success("Brand updated successfully");
+        router.push("/analytics");
       } else {
         toast.error("Failed to update brand");
       }
@@ -37,7 +40,6 @@ const BrandEditor: React.FC<BrandEditorProps> = ({ brand }) => {
 
   const handleDelete = async () => {
     if (!confirm("Are you sure you want to delete this brand?")) return;
-
     setIsSubmitting(true);
     try {
       const response = await fetch("/api/brands/delete", {
@@ -49,7 +51,7 @@ const BrandEditor: React.FC<BrandEditorProps> = ({ brand }) => {
       });
       if (response.ok) {
         toast.success("Brand deleted successfully");
-        // Optionally, redirect or update the UI after deletion
+        router.push("/analytics");
       } else {
         toast.error("Failed to delete brand");
       }
@@ -61,7 +63,7 @@ const BrandEditor: React.FC<BrandEditorProps> = ({ brand }) => {
   };
 
   return (
-    <Card className="p-5 m-5 gap-5">
+    <Card className="p-5 m-5 gap-5 flex flex-col">
       <CardTitle className="text-3xl font-bold">Edit Brand</CardTitle>
       <Input
         type="text"
@@ -69,12 +71,15 @@ const BrandEditor: React.FC<BrandEditorProps> = ({ brand }) => {
         onChange={(e) => setName(e.target.value)}
         disabled={isSubmitting}
       />
+      <div className="flex w-full gap-5">
       <Button onClick={handleUpdate} disabled={isSubmitting}>
         {isSubmitting ? "Updating..." : "Update"}
       </Button>
       <Button onClick={handleDelete} disabled={isSubmitting}>
         {isSubmitting ? "Deleting..." : "Delete"}
       </Button>
+      </div>
+
     </Card>
   );
 };
