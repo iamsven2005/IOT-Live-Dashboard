@@ -1,5 +1,3 @@
-"use client";
-
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -15,14 +13,7 @@ export default function Revenue() {
   useEffect(() => {
     const fetchRevenue = async () => {
       try {
-        const response = await fetch('/api/users', {
-          headers: {
-            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-            'Pragma': 'no-cache',
-            'Expires': '0',
-            'Surrogate-Control': 'no-store'
-          }
-        });
+        const response = await fetch('/api/users');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -45,10 +36,6 @@ export default function Revenue() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-          'Pragma': 'no-cache',
-          'Expires': '0',
-          'Surrogate-Control': 'no-store'
         },
         body: JSON.stringify({ to, subject, message }),
       });
@@ -59,14 +46,7 @@ export default function Revenue() {
 
   const banUser = async (userId: string, email: string) => {
     try {
-      await axios.post('/api/banUser', { userId }, {
-        headers: {
-          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-          'Pragma': 'no-cache',
-          'Expires': '0',
-          'Surrogate-Control': 'no-store'
-        }
-      });
+      await axios.post('/api/banUser', { userId });
       setData((prevData) => ({
         users: prevData.users.map((user) =>
           user.id === userId ? { ...user, role: 'ban' } : user
@@ -82,14 +62,7 @@ export default function Revenue() {
 
   const unbanUser = async (userId: string, email: string) => {
     try {
-      await axios.post('/api/unbanUser', { userId }, {
-        headers: {
-          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-          'Pragma': 'no-cache',
-          'Expires': '0',
-          'Surrogate-Control': 'no-store'
-        }
-      });
+      await axios.post('/api/unbanUser', { userId });
       setData((prevData) => ({
         users: prevData.users.map((user) =>
           user.id === userId ? { ...user, role: 'user' } : user

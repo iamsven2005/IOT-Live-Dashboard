@@ -25,14 +25,7 @@ const DealsList: React.FC = () => {
   useEffect(() => {
     const fetchDeals = async () => {
       try {
-        const response = await fetch('/api/deals', {
-          headers: {
-            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-            'Pragma': 'no-cache',
-            'Expires': '0',
-            'Surrogate-Control': 'no-store'
-          }
-        });
+        const response = await fetch('/api/deals');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
