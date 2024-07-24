@@ -128,8 +128,7 @@ const Column = ({ title, tasks, droppableId, setTasks }: Props) => {
                     >
                       <div className="flex flex-col justify-between items-center">
                         <p>{task.title}</p>
-                        <img src={task.file} alt="task file" />
-                        {hoverIndex === index && (
+                        <img src={task.file} alt="task file" className="w-full m-2 rounded-xl"/>
                           <div className="flex gap-5">
                             <div className="text-xs cursor-pointer" onClick={() => { setEditTaskId(task.id); setEditTaskTitle(task.title); setEditTaskFile(task.file); }}>
                               Edit
@@ -138,9 +137,9 @@ const Column = ({ title, tasks, droppableId, setTasks }: Props) => {
                               Delete
                             </div>
                           </div>
-                        )}
                       </div>
                       <div className="mt-2">
+                        Logs:
                         {taskDetails[task.id]?.map((detail) => (
                           <div key={detail.id} className="text-sm text-gray-600">
                             {detail.description}

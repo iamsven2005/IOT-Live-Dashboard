@@ -90,7 +90,21 @@ export async function signup(
           redirect: false
         })
       }
-
+      const sendEmail = async (to: string, subject: string, message: string) => {
+        try {
+          await fetch('/api/send', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ to, subject, message }),
+          });
+        } catch (error) {
+          console.error('Failed to send email:', error);
+        }
+      };
+    
+      await sendEmail(email, 'Account Created', 'Thank you for signing up with autozone');
       return result
     } catch (error) {
       if (error instanceof AuthError) {

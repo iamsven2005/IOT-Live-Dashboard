@@ -34,9 +34,9 @@ export function Rentals({ props: Rentals }: { props: Rental[] }) {
           >
             <Card>
           <CardContent className="flex flex-col">
-              <CardTitle className="bold uppercase text-zinc-300">{Rental.name}</CardTitle>
-              <CardContent className="bold uppercase text-zinc-300">${Rental.price} / Day</CardContent>
-                <Image src={Rental.image} alt={Rental.name} className='w-full aspect-[4/3] overflow-hidden rounded-xl object-cover object-center' width="100" height="50"></Image>
+              <CardTitle className="bold uppercase">{Rental.name}</CardTitle>
+              <CardContent className="bold uppercase">${Rental.price} / Day</CardContent>
+                <img src={Rental.image} alt={Rental.name} className='w-full aspect-[4/3] overflow-hidden rounded-xl object-cover object-center' width="100" height="50"></img>
                 </CardContent>
               </Card>
           </button>

@@ -39,11 +39,22 @@ const Search = ({ brands }: Props) => {
         setSelectedBrand(brand)
     }
 
-    if (pathname != "/") return null
+    if (pathname !== "/") return null
     return (
         <div className="m-5 p-5">
             <Input value={value} onChange={onChange} placeholder="search" className="pl-10 bg-primary/10" />
             <div className="mt-4">
+                <div className="flex items-center">
+                    <input
+                        type="radio"
+                        id="brand-clear"
+                        name="brand"
+                        checked={selectedBrand === ""}
+                        onChange={() => handleBrandChange("")}
+                        className="mr-2"
+                    />
+                    <label htmlFor="brand-clear">All Brands</label>
+                </div>
                 {brands.map((brand) => (
                     <div key={brand.id} className="flex items-center">
                         <input

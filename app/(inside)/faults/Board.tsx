@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Faults, Status } from "@prisma/client";
 import { useState, useEffect } from "react";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
@@ -129,9 +129,10 @@ const Board = ({ board }: Props) => {
       </CardContent>
 
       {showAddModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-4 rounded shadow">
-            <h2>Add Task</h2>
+        <Card className="fixed inset-0 flex items-center justify-center bg-black">
+          <CardContent>
+          <CardTitle>Add Task</CardTitle>
+
             <Input
               type="text"
               placeholder="Task Title"
@@ -156,8 +157,8 @@ const Board = ({ board }: Props) => {
             <Button onClick={() => setShowAddModal(false)} className="ml-2 bg-gray-500 text-white px-4 py-2 rounded mt-4">
               Cancel
             </Button>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       )}
     </Card>
   );

@@ -4,6 +4,7 @@ import axios from 'axios';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Input } from '@/components/ui/input';
 
 interface SensorData {
   ID: number;
@@ -20,8 +21,10 @@ interface SensorData {
 
 export default function SensorDataTable() {
   const [data, setData] = useState<SensorData[]>([]);
+  const [filteredData, setFilteredData] = useState<SensorData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,6 +32,7 @@ export default function SensorDataTable() {
         const response = await axios.get('/api/mysql');
         console.log('API Response:', response.data);
         setData(response.data.data); // Ensure this matches the structure of your API response
+        setFilteredData(response.data.data);
         if (response.data.error) {
           setError(response.data.error);
         }
@@ -42,6 +46,26 @@ export default function SensorDataTable() {
 
     fetchData();
   }, []);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    if (e.target.value === "") {
+      setFilteredData(data);
+    } else {
+      setFilteredData(data.filter(item => 
+        item.ID.toString().includes(e.target.value) ||
+        item.carid.toString().includes(e.target.value) ||
+        item.temperature.toString().includes(e.target.value) ||
+        item.humidity.toString().includes(e.target.value) ||
+        item.fuellevel.toString().includes(e.target.value) ||
+        item.pressure.toString().includes(e.target.value) ||
+        item.lightintensity.toString().includes(e.target.value) ||
+        item.accelerometer.includes(e.target.value) ||
+        item.gyroscope.includes(e.target.value) ||
+        item.timestamps.toString().includes(e.target.value)
+      ));
+    }
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -60,12 +84,17 @@ export default function SensorDataTable() {
       <CardHeader>
         <CardTitle>Sensor Data</CardTitle>
         <CardDescription className='w-96 break-all'>
-
           Sensor: Endpoint=sb://ihsuprodsgres005dednamespace.servicebus.windows.net/;SharedAccessKeyName=iothubowner;SharedAccessKey=em3GGuJtNXVXErB3bzavU0NAwy7+yzyg1PUPUbLhxBw=;EntityPath=iothub-ehub-it3681-00-25073661-9ede3c7483
         </CardDescription>
-
       </CardHeader>
       <CardContent>
+        <Input
+          type="text"
+          placeholder="Search data..."
+          value={searchTerm}
+          onChange={handleSearchChange}
+          className="mb-4"
+        />
         <ScrollArea className="m-5 whitespace-nowrap rounded-md border h-96">
           <Table>
             <TableHeader>
@@ -83,7 +112,7 @@ export default function SensorDataTable() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {data.map((item) => (
+              {filteredData.map((item) => (
                 <TableRow key={item.ID}>
                   <TableCell>{item.ID}</TableCell>
                   <TableCell>{item.carid}</TableCell>

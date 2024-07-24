@@ -75,9 +75,30 @@ export default function SignupForm() {
 
 function PasswordInput() {
   const [showPassword, setShowPassword] = useState(false)
+  const [password, setPassword] = useState('')
+  const [validationMessage, setValidationMessage] = useState('')
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword)
+  }
+
+  const validatePassword = (password: string) => {
+    if (password.length < 6) {
+      return 'Password must be at least 6 characters long.'
+    }
+    if (!/\d/.test(password)) {
+      return 'Password must contain at least one number.'
+    }
+    if (!/[!@#$%^&*]/.test(password)) {
+      return 'Password must contain at least one special character (!@#$%^&*).'
+    }
+    return ''
+  }
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newPassword = e.target.value
+    setPassword(newPassword)
+    setValidationMessage(validatePassword(newPassword))
   }
 
   return (
@@ -90,6 +111,8 @@ function PasswordInput() {
         placeholder="Enter password"
         required
         minLength={6}
+        value={password}
+        onChange={handlePasswordChange}
       />
       <button
         type="button"
@@ -98,6 +121,9 @@ function PasswordInput() {
       >
         {showPassword ? "Hide" : "Show"}
       </button>
+      {validationMessage && (
+        <div className="mt-1 text-xs text-red-600">{validationMessage}</div>
+      )}
     </div>
   )
 }
