@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -25,7 +25,6 @@ const EditDealForm: React.FC<EditDealFormProps> = ({ deal }) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    // Update the deal in the database
     await fetch(`/api/deals/edit/${deal.id}`, {
       method: 'PUT',
       headers: {
@@ -34,19 +33,18 @@ const EditDealForm: React.FC<EditDealFormProps> = ({ deal }) => {
       body: JSON.stringify({ name, price, description }),
     });
 
-    // Redirect to the updated deal page or any other page
-    router.push(`/Deals/${deal.id}`);
-    toast.success("Updated Deal")
+    toast.success('Updated Deal');
+    router.refresh(); // Ensure the data is refetched
   };
 
   const handleDelete = async () => {
-    // Delete the deal from the database
     await fetch(`/api/deals/delete/${deal.id}`, {
       method: 'DELETE',
     });
 
-    // Redirect to the homepage
-    router.push('/');
+    toast.success('Deleted Deal');
+    router.push('/analytics');
+    router.refresh(); // Ensure the data is refetched
   };
 
   return (
