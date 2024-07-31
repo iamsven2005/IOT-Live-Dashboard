@@ -5,6 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Input } from "@/components/ui/input";
+import { Button } from '@/components/ui/button';
+import { Parser } from 'json2csv';
+import { toast } from 'sonner';
 
 const fetchBookings = async () => {
   try {
@@ -37,6 +40,24 @@ export default function Bookings() {
     setSearchTerm(e.target.value);
   };
 
+  const exportToCSV = () => {
+    const fields = ['Name', 'Car.title', 'startDate', 'endDate', 'pay'];
+    const opts = { fields };
+    try {
+      const parser = new Parser(opts);
+      const csv = parser.parse(filteredBookings);
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', 'bookings.csv');
+      link.click();
+    } catch (err) {
+      console.error('Failed to export data as CSV:', err);
+      toast.error('Failed to export data as CSV');
+    }
+  };
+
   const filteredBookings = bookings.filter(
     (booking) =>
       booking.Name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -50,13 +71,16 @@ export default function Bookings() {
         <CardTitle>Current Bookings</CardTitle>
       </CardHeader>
       <CardContent>
-        <Input
-          type="text"
-          placeholder="Search bookings"
-          value={searchTerm}
-          onChange={handleSearchChange}
-          className="mb-4"
-        />
+        <div className="mb-4 flex justify-between">
+          <Input
+            type="text"
+            placeholder="Search bookings"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            className="mb-4"
+          />
+          <Button onClick={exportToCSV}>Export as CSV</Button>
+        </div>
         <ScrollArea className="h-72 w-auto rounded-md border">
           <Table>
             <TableHeader>

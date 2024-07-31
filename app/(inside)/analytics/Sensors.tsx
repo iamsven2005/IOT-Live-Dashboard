@@ -1,10 +1,13 @@
-"use client"
+"use client";
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Parser } from 'json2csv';
+import { toast } from 'sonner';
 
 interface SensorData {
   ID: number;
@@ -67,6 +70,27 @@ export default function SensorDataTable() {
     }
   };
 
+  const exportToCSV = () => {
+    const fields = [
+      'ID', 'carid', 'temperature', 'humidity', 'fuellevel', 'pressure',
+      'accelerometer', 'gyroscope', 'lightintensity', 'timestamps'
+    ];
+    const opts = { fields };
+    try {
+      const parser = new Parser(opts);
+      const csv = parser.parse(data);
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', 'sensor_data.csv');
+      link.click();
+    } catch (err) {
+      console.error('Failed to export data as CSV:', err);
+      toast.error('Failed to export data as CSV');
+    }
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -88,13 +112,16 @@ export default function SensorDataTable() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Input
-          type="text"
-          placeholder="Search data..."
-          value={searchTerm}
-          onChange={handleSearchChange}
-          className="mb-4"
-        />
+        <div className="mb-4 flex justify-between">
+          <Input
+            type="text"
+            placeholder="Search data..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+            className="mb-4"
+          />
+          <Button onClick={exportToCSV}>Export as CSV</Button>
+        </div>
         <ScrollArea className="m-5 whitespace-nowrap rounded-md border h-96">
           <Table>
             <TableHeader>

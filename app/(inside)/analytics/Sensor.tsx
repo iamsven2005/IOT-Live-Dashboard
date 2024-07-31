@@ -1,11 +1,13 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis, Tooltip } from "recharts";
 import { ChartConfig, ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { TrendingUp } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "sonner";
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 interface DataPoint {
   timestamp: string;
@@ -48,6 +50,7 @@ export function Chart() {
   const [humidityData, setHumidityData] = useState<DataPoint[]>([]);
   const [temperatureThreshold, setTemperatureThreshold] = useState<number>(40);
   const [humidityThreshold, setHumidityThreshold] = useState<number>(100);
+  const chartRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const getData = async () => {
@@ -99,31 +102,42 @@ export function Chart() {
     setHumidityThreshold(Number(event.target.value));
   };
 
+  const exportToPdf = async () => {
+    if (chartRef.current) {
+      const canvas = await html2canvas(chartRef.current);
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF();
+      pdf.addImage(imgData, 'PNG', 0, 0, 210, 297); // A4 size dimensions
+      pdf.save('chart.pdf');
+    }
+  };
+
   return (
-      <Tabs defaultValue="temperature" className="w-full">
-        <TabsList>
-          <TabsTrigger value="temperature">Temperature</TabsTrigger>
-          <TabsTrigger value="humidity">Humidity</TabsTrigger>
-        </TabsList>
-        <TabsContent value="temperature">
-          <Card>
-            <CardHeader>
-              <CardTitle>Area Chart - Temperature Data</CardTitle>
-              <CardDescription>Showing temperature for different cars</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="mb-4">
-                <label htmlFor="temperature-threshold" className="block text-sm font-medium text-gray-700">
-                  Temperature Threshold Value
-                </label>
-                <input
-                  type="number"
-                  id="temperature-threshold"
-                  value={temperatureThreshold}
-                  onChange={handleTemperatureThresholdChange}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-              </div>
+    <Tabs defaultValue="temperature" className="w-full">
+      <TabsList>
+        <TabsTrigger value="temperature">Temperature</TabsTrigger>
+        <TabsTrigger value="humidity">Humidity</TabsTrigger>
+      </TabsList>
+      <TabsContent value="temperature">
+        <Card>
+          <CardHeader>
+            <CardTitle>Area Chart - Temperature Data</CardTitle>
+            <CardDescription>Showing temperature for different cars</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="mb-4">
+              <label htmlFor="temperature-threshold" className="block text-sm font-medium text-gray-700">
+                Temperature Threshold Value
+              </label>
+              <input
+                type="number"
+                id="temperature-threshold"
+                value={temperatureThreshold}
+                onChange={handleTemperatureThresholdChange}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+            <div ref={chartRef}>
               <ChartContainer config={chartConfig}>
                 <AreaChart
                   accessibilityLayer
@@ -169,40 +183,48 @@ export function Chart() {
                   />
                 </AreaChart>
               </ChartContainer>
-            </CardContent>
-            <CardFooter>
-              <div className="flex w-full items-start gap-2 text-sm">
-                <div className="grid gap-2">
-                  <div className="flex items-center gap-2 font-medium leading-none">
-                    Trending up by 5.2% this month <TrendingUp className="size-4" />
-                  </div>
-                  <div className="flex items-center gap-2 leading-none text-muted-foreground">
-                    Temperature data from various cars
-                  </div>
+            </div>
+          </CardContent>
+          <CardFooter>
+            <div className="flex w-full items-start gap-2 text-sm">
+              <div className="grid gap-2">
+                <div className="flex items-center gap-2 font-medium leading-none">
+                  Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+                </div>
+                <div className="flex items-center gap-2 leading-none text-muted-foreground">
+                  Temperature data from various cars
                 </div>
               </div>
-            </CardFooter>
-          </Card>
-        </TabsContent>
-        <TabsContent value="humidity">
-          <Card>
-            <CardHeader>
-              <CardTitle>Area Chart - Humidity Data</CardTitle>
-              <CardDescription>Showing humidity for different cars</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="mb-4">
-                <label htmlFor="humidity-threshold" className="block text-sm font-medium text-gray-700">
-                  Humidity Threshold Value
-                </label>
-                <input
-                  type="number"
-                  id="humidity-threshold"
-                  value={humidityThreshold}
-                  onChange={handleHumidityThresholdChange}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-              </div>
+            </div>
+            <button
+              onClick={exportToPdf}
+              className="ml-auto bg-blue-500 text-white px-4 py-2 rounded-md"
+            >
+              Export to PDF
+            </button>
+          </CardFooter>
+        </Card>
+      </TabsContent>
+      <TabsContent value="humidity">
+        <Card>
+          <CardHeader>
+            <CardTitle>Area Chart - Humidity Data</CardTitle>
+            <CardDescription>Showing humidity for different cars</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="mb-4">
+              <label htmlFor="humidity-threshold" className="block text-sm font-medium text-gray-700">
+                Humidity Threshold Value
+              </label>
+              <input
+                type="number"
+                id="humidity-threshold"
+                value={humidityThreshold}
+                onChange={handleHumidityThresholdChange}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+            <div ref={chartRef}>
               <ChartContainer config={chartConfig}>
                 <AreaChart
                   accessibilityLayer
@@ -248,21 +270,28 @@ export function Chart() {
                   />
                 </AreaChart>
               </ChartContainer>
-            </CardContent>
-            <CardFooter>
-              <div className="flex w-full items-start gap-2 text-sm">
-                <div className="grid gap-2">
-                  <div className="flex items-center gap-2 font-medium leading-none">
-                    Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-                  </div>
-                  <div className="flex items-center gap-2 leading-none text-muted-foreground">
-                    Humidity data from various cars
-                  </div>
+            </div>
+          </CardContent>
+          <CardFooter>
+            <div className="flex w-full items-start gap-2 text-sm">
+              <div className="grid gap-2">
+                <div className="flex items-center gap-2 font-medium leading-none">
+                  Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+                </div>
+                <div className="flex items-center gap-2 leading-none text-muted-foreground">
+                  Humidity data from various cars
                 </div>
               </div>
-            </CardFooter>
-          </Card>
-        </TabsContent>
-      </Tabs>
+            </div>
+            <button
+              onClick={exportToPdf}
+              className="ml-auto bg-blue-500 text-white px-4 py-2 rounded-md"
+            >
+              Export to PDF
+            </button>
+          </CardFooter>
+        </Card>
+      </TabsContent>
+    </Tabs>
   );
 }

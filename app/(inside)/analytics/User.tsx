@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'sonner';
+import { Parser } from 'json2csv';
 
 export default function Revenue() {
   const [data, setData] = useState<{ users: any[] }>({ users: [] });
@@ -83,6 +84,24 @@ export default function Revenue() {
     }
   };
 
+  const exportToCSV = () => {
+    const fields = ['email', 'assignedTask', 'id', 'role'];
+    const opts = { fields };
+    try {
+      const parser = new Parser(opts);
+      const csv = parser.parse(data.users);
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', 'users.csv');
+      link.click();
+    } catch (err) {
+      console.error('Failed to export data as CSV:', err);
+      toast.error('Failed to export data as CSV');
+    }
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -101,13 +120,16 @@ export default function Revenue() {
         <CardTitle>Customer List</CardTitle>
       </CardHeader>
       <CardContent>
-        <Input
-          type="text"
-          placeholder="Search by email"
-          value={searchTerm}
-          onChange={handleSearchChange}
-          className="mb-4"
-        />
+        <div className="mb-4 flex justify-between">
+          <Input
+            type="text"
+            placeholder="Search by email"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            className="mb-4"
+          />
+          <Button onClick={exportToCSV}>Export as CSV</Button>
+        </div>
         <Table>
           <TableHeader>
             <TableRow>

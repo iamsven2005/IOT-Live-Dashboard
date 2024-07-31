@@ -26,6 +26,14 @@ const routes = [
         label: "Book appointment",
     },
     {
+        href: "/faults",
+        label: "Faults",
+    },
+    {
+        href: "/waitlist",
+        label: "CRM",
+    },
+    {
         href: "/analytics",
         label: "Analytics",
     },
