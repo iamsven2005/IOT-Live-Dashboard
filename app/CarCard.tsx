@@ -19,6 +19,7 @@ import { redirect, useRouter } from "next/navigation";
 import useDisabledDates from "@/actions/nah";
 import { Picker } from "./Picker";
 import { Preview } from "./(inside)/Car/preview";
+import Link from "next/link";
 
 interface Props {
   car: CarSensor | null;
@@ -152,12 +153,18 @@ export const CarCard = ({ car, id, booking = [] }: Props) => {
             </AccordionContent>
           </AccordionItem>
         </Accordion>
+        <Button asChild>
+        <Link href={`/review/${car.id}`}>
+        See Reviews
+        </Link>
+        </Button>
         <div>Rental Dates</div>
         <Picker date={date} setDate={setDate} disabledDates={dates} />
         <div>Total Price: <span>${totalPrice}</span> for <span>{days} days</span></div>
         <Button disabled={bookings} onClick={handleBooking}>
           {bookings ? <div><Loader2 className="mr-2 size-4" />Booking</div> : <div ><Wand2 className="mr-2 size-4" />Book now</div>}
         </Button>
+
       </CardFooter>
       <div className="m-5 p-5 flex-wrap gap-5">
 

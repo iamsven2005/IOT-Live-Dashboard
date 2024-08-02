@@ -5,6 +5,8 @@ import { Session } from "@/lib/types";
 import { redirect } from "next/navigation";
 import Search from "@/actions/Search";
 import { db } from "@/lib/db";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface Props {
   searchParams: {
@@ -53,6 +55,11 @@ export default async function Home({ searchParams }: Props) {
           <CarCard key={car.id} car={car} id={id} booking={car.bookings} />
         ))}
       </div>
+      <Button asChild>
+        <Link href="/waitlist">
+        Suggest New Car
+        </Link>
+      </Button>
     </div>
   );
 }

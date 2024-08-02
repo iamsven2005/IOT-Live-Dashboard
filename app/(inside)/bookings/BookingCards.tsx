@@ -1,9 +1,11 @@
 "use client"
-import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardTitle } from "@/components/ui/card";
 import UseLocation from "@/lib/hooks/uselocation";
 import { Booking, Car } from "@prisma/client";
 import { differenceInCalendarDays } from "date-fns";
 import moment from "moment";
+import Link from "next/link";
 import { useState } from "react";
 
 type Props = {
@@ -45,6 +47,18 @@ export const BookingCards = ({ booking }: Props) => {
           <div>Total: {dayCount} days</div>
         </CardDescription>
       </CardContent>
+      <CardFooter>
+      <Button asChild>
+        <Link href={`/review/${booking.Car?.id}`}>
+        Review
+        </Link>
+      </Button>
+      <Button asChild>
+        <Link href={`/view/${booking.id}`}>
+        View Invoice
+        </Link>
+      </Button>
+      </CardFooter>
     </Card>
   );
 };

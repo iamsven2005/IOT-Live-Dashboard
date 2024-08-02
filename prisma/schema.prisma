@@ -109,3 +109,28 @@ enum Status {
   IN_PROGRESS
   DONE
 }
+model review{
+  id  String  @id @default(cuid())
+  review String
+  vote  Int
+  email String
+  carId String
+}
+model waitlist {
+  id        String  @id @default(cuid())
+  email     String
+  suggest   String
+  votes     vote[]  // Relation to votes
+  dislike   Int     @default(0) // Initial value
+  like      Int     @default(0) // Initial value
+}
+
+model vote {
+  id          String  @id @default(cuid())
+  waitlistId  String
+  userId      String  // User ID to track who voted
+  vote        Boolean
+  waitlist    waitlist @relation(fields: [waitlistId], references: [id])
+
+  @@unique([waitlistId, userId])  // Ensure a user can vote only once per suggestion
+}
