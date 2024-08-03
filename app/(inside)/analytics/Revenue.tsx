@@ -1,6 +1,8 @@
 "use client"
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CarIcon, DollarSignIcon, WrenchIcon } from 'lucide-react';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 export default function Revenue() {
@@ -58,8 +60,12 @@ export default function Revenue() {
       ) : (
         <p>Failed to load revenue data.</p>
       )}
-              <p className="text-sm text-gray-500 dark:text-gray-400">Last 30 days</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Last 30 days</p>            <Button asChild>
+            <Link href="/expenses">View Expenses</Link>
+            </Button>
             </CardContent>
+
+            
           </Card>
           </>
   );
