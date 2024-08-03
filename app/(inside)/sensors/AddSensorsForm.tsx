@@ -175,7 +175,7 @@ export const AddFormSensor = ({ car, sensors, handledialogOpen }: Props) => {
                 <FormControl>
                   {image ? (
                     <div className="relative max-w-[400px] min-w-[200px] max-h-[400px] min-h-[200px] mt-4">
-                      <img fill src={image} alt="Sensor Image" className="object-contain" />
+                      <img src={image} alt="Sensor Image" className="object-contain" />
                       <Button
                         type="button"
                         size="icon"
