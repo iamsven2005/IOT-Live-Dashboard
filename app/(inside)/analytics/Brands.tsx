@@ -66,7 +66,7 @@ const router = useRouter()
     return <div>Loading...</div>;
   }
 
-  if (!data || !data.users.length) {
+  if (!data) {
     return <div>Failed to load data.</div>;
   }
 

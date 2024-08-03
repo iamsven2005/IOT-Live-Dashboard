@@ -24,7 +24,7 @@ export const CarCard = ({ car }: Props) => {
     const state = getStateByCodeAndCountry( car?.state, car?.country)
     return (
         <Card>
-            <Image
+            <img
                 alt={car?.id}
                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full"
                 height="310"
@@ -66,7 +66,7 @@ export const CarCard = ({ car }: Props) => {
 <Card key={carse.id}>
     <CardTitle>{carse.title}</CardTitle>
     <CardDescription>{carse.description}</CardDescription>
-    <Image alt={carse.title} src={carse.image} width={310} height={100}></Image>
+    <img alt={carse.title} src={carse.image} width={310} height={100}></img>
 </Card>            )}
   </CarouselContent>
   <CarouselPrevious />

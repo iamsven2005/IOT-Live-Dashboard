@@ -287,7 +287,7 @@ const AddForm = ({ car }: Props) => {
               <FormControl>
                 {image ? (
                   <div className="relative max-w[400px] min-w-[200px] max-h-[400px] min-h-[200px] mt-4">
-                    <Image fill src={image} alt="Car Image" className="object-contain" />
+                    <img fill src={image} alt="Car Image" className="object-contain" />
                     <Button type="button" size="icon" variant="ghost" className="absolute right-[-12px] top-0" onClick={() => handleDelete(image)}>
                       {imageDelete ? <Loader /> : <XCircle />}
                     </Button>

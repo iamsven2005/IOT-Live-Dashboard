@@ -107,7 +107,7 @@ export const CarCard = ({ car, id, booking = [] }: Props) => {
 
   return (
     <Card className="gap-2">
-      <Image
+      <img
         alt={car?.id || "Car image"}
         className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full"
         height="310"
@@ -143,7 +143,7 @@ export const CarCard = ({ car, id, booking = [] }: Props) => {
                     <Card key={carse.id} className="p-5 w-full">
                       <CardTitle>{carse.title}</CardTitle>
                       <CardDescription>{carse.description}</CardDescription>
-                      <Image alt={carse.title} src={carse.image || ""} width={310} height={100} />
+                      <img alt={carse.title} src={carse.image || ""} width={310} height={100} />
                     </Card>
                   ))}
                 </CarouselContent>

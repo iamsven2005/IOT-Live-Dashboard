@@ -47,7 +47,7 @@ const SensorCard = ({car, sensor, bookings = []}: props) => {
     }
     
     return ( <Card>
-        <Image
+        <img
           alt={sensor.title}
           className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full"
           height="310"
