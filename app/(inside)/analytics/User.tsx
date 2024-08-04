@@ -1,31 +1,32 @@
 "use client";
+
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { toast } from 'sonner';
-import { Parser } from 'json2csv';
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { toast } from "sonner";
+import { Parser } from "json2csv";
 
 export default function Revenue() {
   const [data, setData] = useState<{ users: any[] }>({ users: [] });
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch('/api/users');
+        const response = await fetch("/api/users");
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
 
         const result = await response.json();
         setData(result);
       } catch (error) {
-        console.error('Failed to fetch brand data:', error);
+        console.error("Failed to fetch brand data:", error);
       } finally {
         setLoading(false);
       }
@@ -40,65 +41,82 @@ export default function Revenue() {
 
   const sendEmail = async (to: string, subject: string, message: string) => {
     try {
-      await fetch('/api/send', {
-        method: 'POST',
+      await fetch("/api/send", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ to, subject, message }),
       });
     } catch (error) {
-      console.error('Failed to send email:', error);
+      console.error("Failed to send email:", error);
     }
   };
 
   const banUser = async (userId: string, email: string) => {
     try {
-      await axios.post('/api/banUser', { userId });
+      await axios.post("/api/banUser", { userId });
       setData((prevData) => ({
         users: prevData.users.map((user) =>
-          user.id === userId ? { ...user, role: 'ban' } : user
+          user.id === userId ? { ...user, role: "ban" } : user
         ),
       }));
-      toast.success('User banned successfully');
-      await sendEmail(email, 'Account Banned', 'Your account has been banned.');
+      toast.success("User banned successfully");
+      await sendEmail(email, "Account Banned", "Your account has been banned.");
     } catch (error) {
-      console.error('Failed to ban user:', error);
-      toast.error('Failed to ban user');
+      console.error("Failed to ban user:", error);
+      toast.error("Failed to ban user");
     }
   };
 
   const unbanUser = async (userId: string, email: string) => {
     try {
-      await axios.post('/api/unbanUser', { userId });
+      await axios.post("/api/unbanUser", { userId });
       setData((prevData) => ({
         users: prevData.users.map((user) =>
-          user.id === userId ? { ...user, role: 'user' } : user
+          user.id === userId ? { ...user, role: "user" } : user
         ),
       }));
-      toast.success('User unbanned successfully');
-      await sendEmail(email, 'Account Unbanned', 'Your account has been unbanned.');
+      toast.success("User unbanned successfully");
+      await sendEmail(email, "Account Unbanned", "Your account has been unbanned.");
     } catch (error) {
-      console.error('Failed to unban user:', error);
-      toast.error('Failed to unban user');
+      console.error("Failed to unban user:", error);
+      toast.error("Failed to unban user");
+    }
+  };
+
+  // New function to make a user admin
+  const makeAdmin = async (userId: string, email: string) => {
+    try {
+      await axios.post("/api/makeadmin", { userId });
+      setData((prevData) => ({
+        users: prevData.users.map((user) =>
+          user.id === userId ? { ...user, role: "admin" } : user
+        ),
+      }));
+      toast.success("User promoted to admin successfully");
+      await sendEmail(email, "Admin Role Granted", "You have been granted admin privileges.");
+    } catch (error) {
+      console.error("Failed to promote user to admin:", error);
+      toast.error("Failed to promote user to admin");
     }
   };
 
   const exportToCSV = () => {
-    const fields = ['email', 'assignedTask', 'id', 'role'];
+    const fields = ["email", "assignedTask", "id", "role"];
     const opts = { fields };
     try {
       const parser = new Parser(opts);
       const csv = parser.parse(data.users);
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
       const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.setAttribute('href', url);
-      link.setAttribute('download', 'users.csv');
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", "users.csv");
       link.click();
     } catch (err) {
-      console.error('Failed to export data as CSV:', err);
-      toast.error('Failed to export data as CSV');
+      console.error("Failed to export data as CSV:", err);
+      toast.error("Failed to export data as CSV");
     }
   };
 
@@ -110,7 +128,7 @@ export default function Revenue() {
     return <div>Failed to load data.</div>;
   }
 
-  const filteredUsers = data.users.filter(user =>
+  const filteredUsers = data.users.filter((user) =>
     user.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -153,13 +171,27 @@ export default function Revenue() {
                 </TableCell>
                 <TableCell>
                   {user.role === "ban" ? (
-                    <Button variant="secondary" onClick={() => unbanUser(user.id, user.email)}>
+                    <Button
+                      variant="secondary"
+                      onClick={() => unbanUser(user.id, user.email)}
+                    >
                       Unban
                     </Button>
-                  ) : (
-                    <Button variant="destructive" onClick={() => banUser(user.id, user.email)}>
-                      Ban
-                    </Button>
+                  ) : user.role === "admin" ? null : (
+                    <>
+                      <Button
+                        variant="destructive"
+                        onClick={() => banUser(user.id, user.email)}
+                      >
+                        Ban
+                      </Button>
+                      <Button
+                        
+                        onClick={() => makeAdmin(user.id, user.email)}
+                      >
+                        Make Admin
+                      </Button>
+                    </>
                   )}
                 </TableCell>
               </TableRow>

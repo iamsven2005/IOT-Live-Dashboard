@@ -30,7 +30,12 @@ export default async function Home({ params }: Props) {
     return redirect("/login");
   }
 
-  const isAdmin = process.env.ADMIN === session.user.email;
+  const admin = await db.user.findFirst({
+    where:{
+      email: session.user.email
+    }
+  })
+  const isAdmin = admin?.role === "admin"
 
   return (
     <Card className="m-5 p-5">

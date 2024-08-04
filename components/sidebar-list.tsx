@@ -10,6 +10,7 @@ import Header from '@/app/(inside)/header'
 import Link from 'next/link'
 import { Button } from './ui/button'
 import { redirect } from 'next/navigation'
+import { db } from '@/lib/db'
 
 interface SidebarListProps {
   userId?: string
@@ -27,9 +28,15 @@ export async function SidebarList({ userId }: SidebarListProps) {
   if (!session) {
     return redirect("/");
   }
+  const admin = await db.user.findFirst({
+    where:{
+      email: session.user.email
+    }
+  })
+  const isAdmin = admin?.role === "admin"
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
-      {session.user.email == process.env.ADMIN  ? <Header/> : <div className='gap-2'><Link href="/bookings" className='m-2'><Button>View Bookings</Button></Link><Link href="/support" className='m-2'><Button>Request for help</Button></Link>
+      {isAdmin  ? <Header/> : <div className='gap-2'><Link href="/bookings" className='m-2'><Button>View Bookings</Button></Link><Link href="/support" className='m-2'><Button>Request for help</Button></Link>
         </div>}
       <div className="flex-1 overflow-auto">
         {chats?.length ? (

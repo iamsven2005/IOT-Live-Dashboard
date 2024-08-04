@@ -22,8 +22,14 @@ const Car = async ({ params }: Props) => {
   if (!session) {
     return redirect("/");
   }
+  const admin = await db.user.findFirst({
+    where:{
+      email: session.user.email
+    }
+  })
+  const isAdmin = admin?.role === "admin"
   const brands = await db.brand.findMany()
-  return (<div className="flex flex-col container">{session.user.email == process.env.ADMIN ?( <AddForm car={car} brands={brands}/>) : (<CarCard id={params.Id} car={car} booking={car?.bookings}/>)}
+  return (<div className="flex flex-col container">{isAdmin ?( <AddForm car={car} brands={brands}/>) : (<CarCard id={params.Id} car={car} booking={car?.bookings}/>)}
  </div>);
 };
 
