@@ -57,7 +57,7 @@ export default async function Home({ searchParams }: Props) {
       </div>
       <Button asChild>
         <Link href="/waitlist">
-        Suggest New Car
+        Suggest Something New
         </Link>
       </Button>
     </div>

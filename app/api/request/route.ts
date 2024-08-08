@@ -35,3 +35,29 @@ export async function GET() {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
+
+// Handle DELETE requests to delete a feature request
+export async function DELETE(req: NextRequest) {
+  try {
+    const { id } = await req.json();
+
+    if (!id) {
+      return NextResponse.json({ error: 'Feature request ID is required.' }, { status: 400 });
+    }
+
+    // Delete related votes first
+    await db.vote.deleteMany({
+      where: { waitlistId: id },
+    });
+
+    // Then delete the feature request
+    await db.waitlist.delete({
+      where: { id },
+    });
+
+    return NextResponse.json({ message: 'Feature request deleted successfully.' }, { status: 200 });
+  } catch (error) {
+    console.error('Error deleting feature request:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+}

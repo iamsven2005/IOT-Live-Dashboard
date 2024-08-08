@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import React, { useEffect, useState } from 'react';
@@ -11,13 +11,14 @@ interface FeatureRequest {
   dislike: number;
   votes: { userId: string; vote: boolean }[];
 }
-interface Props{
-    user: string
+
+interface Props {
+  user: string;
+  isAdmin: boolean;
 }
 
-
-const FeatureRequestList = ({user}: Props) => {
-const mockUserId = user;
+const FeatureRequestList = ({ user, isAdmin }: Props) => {
+  const mockUserId = user;
   const [requests, setRequests] = useState<FeatureRequest[]>([]);
 
   useEffect(() => {
@@ -43,7 +44,7 @@ const mockUserId = user;
         },
         body: JSON.stringify({
           waitlistId: id,
-          userId: mockUserId, // Pass the userId here
+          userId: mockUserId,
           vote,
         }),
       });
@@ -69,10 +70,32 @@ const mockUserId = user;
       } else {
         const error = await response.json();
         console.error(error);
-        alert(error.error); // Display the error message to the user
+        alert(error.error);
       }
     } catch (error) {
       console.error('Failed to submit vote:', error);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      const response = await fetch('/api/request', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id }),
+      });
+
+      if (response.ok) {
+        setRequests((prevRequests) => prevRequests.filter((request) => request.id !== id));
+      } else {
+        const error = await response.json();
+        console.error(error);
+        alert(error.error);
+      }
+    } catch (error) {
+      console.error('Failed to delete feature request:', error);
     }
   };
 
@@ -80,7 +103,7 @@ const mockUserId = user;
     <Card>
       <CardTitle>Feature Requests</CardTitle>
       {requests.map((request) => {
-        const userVote = request.votes.find(v => v.userId === mockUserId);
+        const userVote = request.votes.find((v) => v.userId === mockUserId);
         const userHasLiked = userVote ? userVote.vote : false;
 
         return (
@@ -100,6 +123,11 @@ const mockUserId = user;
               >
                 Dislike {request.dislike}
               </Button>
+              {isAdmin && (
+                <Button onClick={() => handleDelete(request.id)} className="ml-2">
+                  Delete
+                </Button>
+              )}
             </div>
           </CardContent>
         );
