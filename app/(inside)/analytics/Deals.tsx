@@ -25,6 +25,18 @@ const DealsList: React.FC = async() => {
                 Create
             </Button>
           </Link>
+          <Link href="/expenses">
+            <Button>
+                Expenses
+            </Button>
+          </Link>
+          <Link href="/notes">
+            <Button>
+            Notes
+            </Button>
+          </Link>
+
+
         </CardDescription>
       </CardHeader>
       <CardContent>

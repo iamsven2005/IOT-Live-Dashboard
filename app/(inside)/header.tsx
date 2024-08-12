@@ -38,6 +38,14 @@ const routes = [
         label: "Analytics",
     },
     {
+        href: "/expenses",
+        label: "Expenses"
+    },
+    {
+        href: "/notes",
+        label: "Notes"
+    },
+    {
         href: "/",
         label: "Home"
     }
