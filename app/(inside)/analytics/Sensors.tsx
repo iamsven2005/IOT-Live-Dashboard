@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Parser } from 'json2csv';
 import { toast } from 'sonner';
+import * as Switch from '@radix-ui/react-switch';
 
 interface SensorData {
   ID: number;
@@ -19,7 +20,7 @@ interface SensorData {
   accelerometer: string;
   gyroscope: string;
   lightintensity: number;
-  timestamps: Date
+  timestamps: Date;
 }
 
 export default function SensorDataTable() {
@@ -28,13 +29,14 @@ export default function SensorDataTable() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [isGenerating, setIsGenerating] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get('/api/mysql');
         console.log('API Response:', response.data);
-        setData(response.data.data); // Ensure this matches the structure of your API response
+        setData(response.data.data);
         setFilteredData(response.data.data);
         if (response.data.error) {
           setError(response.data.error);
@@ -55,25 +57,36 @@ export default function SensorDataTable() {
     if (e.target.value === "") {
       setFilteredData(data);
     } else {
-      setFilteredData(data.filter(item => 
-        item.ID.toString().includes(e.target.value) ||
-        item.carid.toString().includes(e.target.value) ||
-        item.temperature.toString().includes(e.target.value) ||
-        item.humidity.toString().includes(e.target.value) ||
-        item.fuellevel.toString().includes(e.target.value) ||
-        item.pressure.toString().includes(e.target.value) ||
-        item.lightintensity.toString().includes(e.target.value) ||
-        item.accelerometer.includes(e.target.value) ||
-        item.gyroscope.includes(e.target.value) ||
-        item.timestamps.toString().includes(e.target.value)
-      ));
+      setFilteredData(
+        data.filter(
+          (item) =>
+            item.ID.toString().includes(e.target.value) ||
+            item.carid.toString().includes(e.target.value) ||
+            item.temperature.toString().includes(e.target.value) ||
+            item.humidity.toString().includes(e.target.value) ||
+            item.fuellevel.toString().includes(e.target.value) ||
+            item.pressure.toString().includes(e.target.value) ||
+            item.lightintensity.toString().includes(e.target.value) ||
+            item.accelerometer.includes(e.target.value) ||
+            item.gyroscope.includes(e.target.value) ||
+            item.timestamps.toString().includes(e.target.value)
+        )
+      );
     }
   };
 
   const exportToCSV = () => {
     const fields = [
-      'ID', 'carid', 'temperature', 'humidity', 'fuellevel', 'pressure',
-      'accelerometer', 'gyroscope', 'lightintensity', 'timestamps'
+      'ID',
+      'carid',
+      'temperature',
+      'humidity',
+      'fuellevel',
+      'pressure',
+      'accelerometer',
+      'gyroscope',
+      'lightintensity',
+      'timestamps',
     ];
     const opts = { fields };
     try {
@@ -88,6 +101,17 @@ export default function SensorDataTable() {
     } catch (err) {
       console.error('Failed to export data as CSV:', err);
       toast.error('Failed to export data as CSV');
+    }
+  };
+
+  const handleToggle = async (checked: boolean) => {
+    setIsGenerating(checked);
+    try {
+      await axios.post('/api/cron-job', { action: checked ? 'start' : 'stop' });
+      toast.success(`Data generation ${checked ? 'started' : 'stopped'}`);
+    } catch (error) {
+      console.error('Failed to toggle data generation', error);
+      toast.error(`Failed to ${checked ? 'start' : 'stop'} data generation`);
     }
   };
 
@@ -107,7 +131,7 @@ export default function SensorDataTable() {
     <Card>
       <CardHeader>
         <CardTitle>Sensor Data</CardTitle>
-        <CardDescription className='w-96 break-all'>
+        <CardDescription className="w-96 break-all">
           Sensor: Endpoint=sb://ihsuprodsgres005dednamespace.servicebus.windows.net/;SharedAccessKeyName=iothubowner;SharedAccessKey=em3GGuJtNXVXErB3bzavU0NAwy7+yzyg1PUPUbLhxBw=;EntityPath=iothub-ehub-it3681-00-25073661-9ede3c7483
         </CardDescription>
       </CardHeader>
@@ -121,6 +145,17 @@ export default function SensorDataTable() {
             className="mb-4"
           />
           <Button onClick={exportToCSV}>Export as CSV</Button>
+          <div className="flex items-center">
+            <label htmlFor="generate-switch" className="mr-2">Generate Data</label>
+            <Switch.Root
+              id="generate-switch"
+              checked={isGenerating}
+              onCheckedChange={handleToggle}
+              className="relative inline-flex h-[24px] w-[44px] cursor-pointer rounded-full bg-gray-200 transition-colors duration-200 ease-in-out"
+            >
+              <Switch.Thumb className="inline-block h-[20px] w-[20px] rounded-full bg-white shadow transform transition duration-200 ease-in-out" />
+            </Switch.Root>
+          </div>
         </div>
         <ScrollArea className="m-5 whitespace-nowrap rounded-md border h-96">
           <Table>
@@ -148,11 +183,16 @@ export default function SensorDataTable() {
                   <TableCell>{item.fuellevel}</TableCell>
                   <TableCell>{item.pressure}</TableCell>
                   <TableCell>
-                    {JSON.parse(item.accelerometer).x.toFixed(2)}, {JSON.parse(item.accelerometer).y.toFixed(2)}, {JSON.parse(item.accelerometer).z.toFixed(2)}
-                  </TableCell>
-                  <TableCell>
-                    {JSON.parse(item.gyroscope).x.toFixed(2)}, {JSON.parse(item.gyroscope).y.toFixed(2)}, {JSON.parse(item.gyroscope).z.toFixed(2)}
-                  </TableCell>
+  {Number(JSON.parse(item.accelerometer).x).toFixed(2)}, 
+  {Number(JSON.parse(item.accelerometer).y).toFixed(2)}, 
+  {Number(JSON.parse(item.accelerometer).z).toFixed(2)}
+</TableCell>
+<TableCell>
+  {Number(JSON.parse(item.gyroscope).x).toFixed(2)}, 
+  {Number(JSON.parse(item.gyroscope).y).toFixed(2)}, 
+  {Number(JSON.parse(item.gyroscope).z).toFixed(2)}
+</TableCell>
+
                   <TableCell>{item.lightintensity}</TableCell>
                   <TableCell>{item.timestamps.toString()}</TableCell>
                 </TableRow>
