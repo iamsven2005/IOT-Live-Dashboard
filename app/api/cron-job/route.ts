@@ -20,30 +20,33 @@ export async function POST(req: NextRequest) {
           throw new Error('Database connection failed');
         }
 
+        // Randomly select a carId between 1, 2, and 3
+        const carid = Math.floor(Math.random() * 3) + 1;
+
         const randomData = {
-          carid: Math.floor(Math.random() * 1000),
-          temperature: (Math.random() * 100).toFixed(2),
-          humidity: (Math.random() * 100).toFixed(2),
-          fuellevel: (Math.random() * 100).toFixed(2),
-          pressure: (Math.random() * 100).toFixed(2),
+          carid,
+          temperature: parseFloat((Math.random() * 20 + 20).toFixed(2)), // Temperature between 20 and 40 degrees
+          humidity: parseFloat((Math.random() * 20 + 60).toFixed(2)), // Humidity between 60 and 80%
+          fuellevel: parseFloat((Math.random() * 100).toFixed(2)),
+          pressure: parseFloat((Math.random() * 3000).toFixed(2)), // Pressure with a realistic range up to 3000
           accelerometer: JSON.stringify({
-            x: (Math.random() * 10).toFixed(2),
-            y: (Math.random() * 10).toFixed(2),
-            z: (Math.random() * 10).toFixed(2),
+            x: parseFloat((Math.random() * 2 - 1).toFixed(6)),
+            y: parseFloat((Math.random() * 2 - 1).toFixed(6)),
+            z: parseFloat((Math.random() * 2 - 1).toFixed(6)),
           }),
           gyroscope: JSON.stringify({
-            x: (Math.random() * 10).toFixed(2),
-            y: (Math.random() * 10).toFixed(2),
-            z: (Math.random() * 10).toFixed(2),
+            x: parseFloat((Math.random() * 360 - 180).toFixed(6)),
+            y: parseFloat((Math.random() * 360 - 180).toFixed(6)),
+            z: parseFloat((Math.random() * 360 - 180).toFixed(6)),
           }),
-          lightintensity: (Math.random() * 100).toFixed(2),
-          timestamps: new Date(),
+          lightintensity: parseFloat((Math.random() * 10000).toFixed(2)),
+          timestamps: new Date().toISOString(),
         };
 
         await pool.request().query(
           `INSERT INTO sensordata (carid, temperature, humidity, fuellevel, pressure, accelerometer, gyroscope, lightintensity, timestamps) 
            VALUES (${randomData.carid}, ${randomData.temperature}, ${randomData.humidity}, ${randomData.fuellevel}, ${randomData.pressure}, 
-                   '${randomData.accelerometer}', '${randomData.gyroscope}', ${randomData.lightintensity}, '${randomData.timestamps.toISOString()}')`
+                   '${randomData.accelerometer}', '${randomData.gyroscope}', ${randomData.lightintensity}, '${randomData.timestamps}')`
         );
 
         // Revalidate the /analytics path
