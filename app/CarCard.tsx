@@ -106,6 +106,8 @@ export const CarCard = ({ car, id, booking = [] }: Props) => {
   };
 
   return (
+    <Accordion type="single" collapsible className="w-full">
+      <AccordionItem value="item-3">
     <Card className="gap-2">
       <img
         alt={car?.id || "Car image"}
@@ -115,11 +117,13 @@ export const CarCard = ({ car, id, booking = [] }: Props) => {
         width="540"
       />
       <CardHeader>
-        <CardTitle>{car?.title}</CardTitle>
-        <CardDescription><Preview value={car?.description}/>
-          </CardDescription>
+      <AccordionTrigger><CardTitle>{car?.title}</CardTitle></AccordionTrigger>
+        
       </CardHeader>
+      <AccordionContent>
       <CardFooter className="flex flex-col items-start">
+      <CardDescription><Preview value={car?.description}/>
+      </CardDescription>
         <Separator />
         <Accordion type="single" collapsible className="w-full">
           <AccordionItem value="item-1">
@@ -138,7 +142,7 @@ export const CarCard = ({ car, id, booking = [] }: Props) => {
             <AccordionTrigger>Sensors</AccordionTrigger>
             <AccordionContent>
               <Carousel className="m-5">
-                <CarouselContent className="m-5 gap-5">
+                <CarouselContent className="m-5 gap-2">
                   {car?.sensors.map((carse) => (
                     <Card key={carse.id} className="p-5 w-full">
                       <CardTitle>{carse.title}</CardTitle>
@@ -166,9 +170,10 @@ export const CarCard = ({ car, id, booking = [] }: Props) => {
         </Button>
 
       </CardFooter>
-      <div className="m-5 p-5 flex-wrap gap-5">
+      </AccordionContent>
 
-      </div>
     </Card>
+    </AccordionItem>
+    </Accordion>
   );
 };
