@@ -7,8 +7,6 @@ interface FeatureRequest {
   id: string;
   email: string;
   suggest: string;
-  like: number;
-  dislike: number;
   votes: { userId: string; vote: boolean }[];
 }
 
@@ -56,8 +54,6 @@ const FeatureRequestList = ({ user, isAdmin }: Props) => {
             request.id === id
               ? {
                   ...request,
-                  like: vote ? request.like + 1 : request.like - 1,
-                  dislike: vote ? request.dislike - 1 : request.dislike + 1,
                   votes: request.votes.map((v) =>
                     v.userId === mockUserId
                       ? { ...v, vote }
@@ -104,7 +100,11 @@ const FeatureRequestList = ({ user, isAdmin }: Props) => {
       <CardTitle>Feature Requests</CardTitle>
       {requests.map((request) => {
         const userVote = request.votes.find((v) => v.userId === mockUserId);
-        const userHasLiked = userVote ? userVote.vote : false;
+        const userHasLiked = userVote ? userVote.vote : null;
+
+        // Calculate the number of likes and dislikes from votes
+        const likeCount = request.votes.filter(vote => vote.vote === true).length;
+        const dislikeCount = request.votes.filter(vote => vote.vote === false).length;
 
         return (
           <CardContent key={request.id} className="request-item">
@@ -113,15 +113,15 @@ const FeatureRequestList = ({ user, isAdmin }: Props) => {
             <div>
               <Button
                 onClick={() => handleVote(request.id, true)}
-                className={userHasLiked ? 'active' : ''}
+                className={userHasLiked === true ? 'active' : ''}
               >
-                Like {request.like}
+                Like {likeCount}
               </Button>
               <Button
                 onClick={() => handleVote(request.id, false)}
-                className={!userHasLiked ? 'active' : ''}
+                className={userHasLiked === false ? 'active' : ''}
               >
-                Dislike {request.dislike}
+                Dislike {dislikeCount}
               </Button>
               {isAdmin && (
                 <Button onClick={() => handleDelete(request.id)} className="ml-2">
