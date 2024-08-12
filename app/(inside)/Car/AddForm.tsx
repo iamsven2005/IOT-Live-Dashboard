@@ -507,7 +507,7 @@ const AddForm = ({ car, brands }: Props) => {
             )}
           </Button>
         )}
-        <Button type="submit" className="m-5" disabled={isLoading}>
+        <Button type="submit" className="m-10" disabled={isLoading}>
           Submit
         </Button>
 

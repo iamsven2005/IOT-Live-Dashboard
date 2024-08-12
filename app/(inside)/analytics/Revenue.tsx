@@ -1,42 +1,23 @@
-"use client"
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { db } from '@/lib/db';
 import { CarIcon, DollarSignIcon, WrenchIcon } from 'lucide-react';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { notFound } from 'next/navigation';
 
-export default function Revenue() {
-  const [data, setData] = useState<{ totalRevenue: number; bookingCount: number } | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchRevenue = async () => {
-      try {
-        const response = await fetch('/api/revenue');
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-
-        const result = await response.json();
-        setData(result);
-      } catch (error) {
-        console.error('Failed to fetch revenue data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchRevenue();
-  }, []);
-
-  if (loading) {
-    return <div>Loading...</div>;
+export default async function Revenue() {
+  const bookings = await db.booking.findMany({
+    select: {
+      amount: true,
+    },
+  });
+  
+  if (!bookings || bookings.length === 0) {
+    notFound()
   }
-
-  if (!data) {
-    return <div>Failed to load data.</div>;
-  }
-
+  
+  const totalRevenue = bookings.reduce((sum, booking) => sum + booking.amount, 0);
+  const bookingCount = bookings.length;
   return (
     <>
         <Card>
@@ -45,7 +26,7 @@ export default function Revenue() {
             <CarIcon className="size-8 text-gray-500 dark:text-gray-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-4xl font-bold">{data.bookingCount}</div>
+            <div className="text-4xl font-bold">{bookingCount}</div>
             <p className="text-sm text-gray-500 dark:text-gray-400">Currently rented out</p>
           </CardContent>
         </Card>
@@ -55,8 +36,8 @@ export default function Revenue() {
               <DollarSignIcon className="size-8 text-gray-500 dark:text-gray-400" />
             </CardHeader>
             <CardContent>
-            {data.totalRevenue !== null ? (
-        <div className="text-4xl font-bold">${data.totalRevenue.toFixed(2)}</div>
+            {totalRevenue !== null ? (
+        <div className="text-4xl font-bold">${totalRevenue.toFixed(2)}</div>
       ) : (
         <p>Failed to load revenue data.</p>
       )}

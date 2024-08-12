@@ -30,7 +30,7 @@ const CreateDealForm: React.FC = () => {
       router.push(`/Deals/${data.id}`);
       toast.success("Created New Deal");
     } else {
-      toast.error("Failed to create deal");
+      toast.error("Created Dea2l");
     }
   };
 

@@ -7,7 +7,7 @@ import { openai } from '@ai-sdk/openai';
 export async function continueConversation(messages: CoreMessage[]) {
   'use server';
   const result = await streamText({
-    model: openai('gpt-3.5-turbo'),
+    model: openai('gpt-4o-mini'),
     messages,
   });
   const data = 'the current best rental car is Ford150 , what is the best course of action for a car rental compant?'

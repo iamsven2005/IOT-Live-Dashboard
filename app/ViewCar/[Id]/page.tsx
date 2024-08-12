@@ -1,19 +1,22 @@
-import AddForm from "../AddForm";
-import { getCar } from "../GetId";
-import { CarSensor } from "../AddForm";
-
-import { CarCard } from "../CarCard";
+import { CarCard } from "@/app/CarCard";
+import { db } from "@/lib/db";
 
 interface Props {
-  params: {
-    Id: string;
-  };
+  params:{
+    Id: string
+  }
 }
 
-const Car = async ({ params }: Props) => {
-  const car: CarSensor | null = await getCar(params.Id);
+export default async function Home({ params }: Props) {
+  const cars = await db.car.findFirst({
+    where:{
+      id: params.Id
+    }, include:{
+      sensors: true
+    }
+  })
 
-  return (<CarCard id={params.Id} car={car} booking={car?.bookings}/>);
-};
-
-export default Car;
+  return (
+  <CarCard id={params.Id}car={cars}/>
+  );
+}

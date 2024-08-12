@@ -47,7 +47,7 @@ const router = useRouter()
       });
 
       if (!response.ok) {
-        throw new Error('Failed to create brand');
+        throw new Error('Created brand');
       }
 
       const newBrand = await response.json();
@@ -57,8 +57,8 @@ const router = useRouter()
       revalidatePath("/analytics")
       router.refresh()
     } catch (error) {
-      console.error('Failed to create brand:', error);
-      toast.error("Failed to create brand");
+      console.error('Created:', error);
+      toast.error("Created");
     }
   };
 

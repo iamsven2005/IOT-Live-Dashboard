@@ -153,7 +153,7 @@ async function submitUserMessage(content: string): Promise<{ id: string; display
   });
   const carArray = JSON.stringify(cars);
   const ui = render({
-    model: 'gpt-3.5-turbo',
+    model: 'gpt-4o-mini',
     provider: openai,
     initial: <SpinnerMessage />,
     messages: [
