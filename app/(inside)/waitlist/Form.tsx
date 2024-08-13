@@ -54,7 +54,7 @@ const FeatureRequestForm: React.FC = () => {
   return (
     <Card className="p-4">
       <CardTitle className="mb-4 text-lg font-bold">Submit a Feature Request</CardTitle>
-      {message && <p className="mb-4 text-sm text-gray-700">{message}</p>}
+      {message && <p className="mb-4 text-sm">{message}</p>}
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label className="block mb-1 text-sm font-medium">Email:</label>

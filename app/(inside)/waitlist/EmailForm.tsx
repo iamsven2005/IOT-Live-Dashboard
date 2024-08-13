@@ -39,7 +39,7 @@ const EmailForm: React.FC = () => {
   return (
     <Card className="p-4 mt-4">
       <CardTitle className="mb-4 text-lg font-bold">Send Email to User</CardTitle>
-      {statusMessage && <p className="mb-4 text-sm text-gray-700">{statusMessage}</p>}
+      {statusMessage && <p className="mb-4 text-sm">{statusMessage}</p>}
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label className="block mb-1 text-sm font-medium">To:</label>

@@ -8,6 +8,7 @@ import RentalPaymentForm from "./Payment"
 import { useEffect, useState } from "react"
 import Image from "next/image";
 import Link from "next/link";
+import { Preview } from "../Car/preview";
 const BookClient = () => {
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string)
 const {bookingData, clientSecret}= useBook()
@@ -51,7 +52,8 @@ if(paymentSuccess) return <div className="text-center flex flex-col"><div classN
         <div className="space-y-2">
           <CardTitle className="text-xl font-bold">{bookingData.car.title}</CardTitle>
           <CardDescription className="text-gray-500 dark:text-gray-400">
-            {bookingData.car.description}
+            <Preview value=            {bookingData.car.description}
+            />
           </CardDescription>
         </div>
         <div className="flex items-center space-x-4">

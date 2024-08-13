@@ -1,4 +1,5 @@
 import { db } from '@/lib/db';
+import { revalidatePath } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
 // Handle POST requests to create a new feature request
@@ -12,7 +13,7 @@ export async function POST(req: NextRequest) {
         suggest,
       },
     });
-
+    revalidatePath("/waitlist")
     return NextResponse.json(newRequest, { status: 201 });
   } catch (error) {
     console.error('Error creating feature request:', error);

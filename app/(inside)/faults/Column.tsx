@@ -158,7 +158,7 @@ const Column = ({ title, tasks, droppableId, setTasks }: Props) => {
 
       {editTaskId && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-4 rounded shadow">
+          <div className="bg-black p-4 rounded shadow">
             <h2>Edit Task</h2>
             <Input
               type="text"
