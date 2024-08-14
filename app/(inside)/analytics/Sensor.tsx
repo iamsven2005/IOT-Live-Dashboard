@@ -45,6 +45,31 @@ const transformHumidityData = (data: any[]): DataPoint[] => {
   }));
 };
 
+const sendEmail = async (type: string, threshold: number) => {
+  try {
+    const response = await fetch('/api/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        to: 'iamsven2005@gmail.com',
+        subject: `${type} Threshold Alert`,
+        message: `${type} value has exceeded the threshold of ${threshold}. Please take necessary actions.`,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to send email');
+    }
+    
+    const data = await response.json();
+    console.log('Email sent successfully:', data);
+  } catch (error) {
+    console.error('Error sending email:', error);
+  }
+};
+
 export function Chart() {
   const [temperatureData, setTemperatureData] = useState<DataPoint[]>([]);
   const [humidityData, setHumidityData] = useState<DataPoint[]>([]);
@@ -66,13 +91,20 @@ export function Chart() {
 
   useEffect(() => {
     const checkThreshold = (data: DataPoint[], threshold: number, type: string) => {
+      let exceeded = false;
+      
       data.forEach(point => {
         if ((point.desktop !== null && point.desktop > threshold) ||
             (point.mobile !== null && point.mobile > threshold) ||
             (point.other !== null && point.other > threshold)) {
+          exceeded = true;
           toast.error(`${type} value exceeded the threshold of ${threshold}`);
         }
       });
+      
+      if (exceeded) {
+        sendEmail(type, threshold);  // Send an email if the threshold is exceeded
+      }
     };
 
     checkThreshold(temperatureData, temperatureThreshold, 'Temperature');

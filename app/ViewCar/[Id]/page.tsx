@@ -1,4 +1,4 @@
-import { CarCard } from "@/app/CarCard";
+import { CarCard2 } from "@/app/CarCard2";
 import { db } from "@/lib/db";
 
 interface Props {
@@ -17,6 +17,6 @@ export default async function Home({ params }: Props) {
   })
 
   return (
-  <CarCard id={params.Id}car={cars}/>
+  <CarCard2 id={params.Id}car={cars}/>
   );
 }

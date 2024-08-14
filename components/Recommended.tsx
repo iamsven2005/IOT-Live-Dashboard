@@ -34,8 +34,9 @@ const CarRentalDeals = () => {
 
   return (
     <Card>
-      <CardTitle>Car Rental Deals</CardTitle>
       <CardContent className='gap-2 m-2 p-2 flex flex-col'>
+      <CardTitle>Car Rental Deals</CardTitle>
+
         {deals.map((deal) => (
           <Card key={deal.id} className='p-2'>
             <Link href={`/Deals/${deal.id}`}>

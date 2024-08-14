@@ -36,7 +36,9 @@ export async function SidebarList({ userId }: SidebarListProps) {
   const isAdmin = admin?.role === "admin"
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
-      {isAdmin  ? <Header/> : <div className='gap-2'><Link href="/bookings" className='m-2'><Button>View Bookings</Button></Link><Link href="/support" className='m-2'><Button>Request for help</Button></Link>
+      {isAdmin  ? <Header/> : <div className='gap-2 flex flex-col'><Link href="/bookings" className='m-2'><Button>View Bookings</Button></Link>
+      <Link href="/support" className='m-2'><Button>Request for help</Button></Link>
+      <Link href="/" className='m-2'><Button>Home</Button></Link>
         </div>}
       <div className="flex-1 overflow-auto">
         {chats?.length ? (

@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import StarRating from "./rating";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   params: {
@@ -104,7 +105,10 @@ const ReviewPage = ({ params }: Props) => {
       <Card>
         <CardHeader>
           <CardTitle>Submit Your Review</CardTitle>
+          <Button asChild>
           <Link href={"/bookings"}>View Bookings</Link>
+          </Button>
+          
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
